@@ -1,5 +1,5 @@
 {
-  "name": "nextjs-cz-tw-template",
+  "name": "gs-admin",
   "private": true,
   "scripts": {
     "dev": "next dev",
