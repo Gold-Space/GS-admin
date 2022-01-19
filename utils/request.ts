@@ -1,9 +1,9 @@
 /*
- * @FilePath: /GS-admin/utils/Request.ts
+ * @FilePath: /GS-admin/utils/request.ts
  * @author: Wibus
  * @Date: 2022-01-19 20:31:06
  * @LastEditors: Wibus
- * @LastEditTime: 2022-01-19 20:34:01
+ * @LastEditTime: 2022-01-19 20:57:19
  * Coding With IU
  */
 import { Message } from '@arco-design/web-react'
@@ -20,6 +20,12 @@ const service = axios.create({
 service.interceptors.request.use(
   (config) => {
     const token = getToken()
+    if (!config) {
+      config = {};
+    }
+    if (!config.headers) {
+        config.headers = {};
+    }
     if (token) {
       config.headers['Authorization'] = 'bearer ' + getToken()
     }
