@@ -1,5 +1,5 @@
 import type { NextPage } from 'next'
-import { Layout, Menu, Breadcrumb, Button, Message, Avatar, Typography, Space } from '@arco-design/web-react';
+import { Layout, Menu, Breadcrumb, Button, Message, Avatar, Typography, Space, Grid, Statistic, Badge } from '@arco-design/web-react';
 import { IconHome, IconCalendar, IconCaretRight, IconCaretLeft } from '@arco-design/web-react/icon';
 import { useEffect, useState } from 'react';
 import Router from 'next/router';
@@ -14,10 +14,30 @@ const Home: NextPage = () => {
   const Content = Layout.Content;
   // 设置状态
   const [collapsed, setCollapsed] = useState(false);
+  const [postNum, setPostNum] = useState(0);
+  const [pageNum, setPageNum] = useState(0);
+  const [commentsNum, setCommentsNum] = useState(0);
+  // unReadComments
+  const [unReadCommentsNum, setUnReadCommentsNum] = useState(0);
+  // Allfriends
+  const [allFriendsNum, setAllFriendsNum] = useState(0);
+  // Unfriends
+  const [unFriendsNum, setUnFriendsNum] = useState(0);
+  // categories
+  const [categoriesNum, setCategoriesNum] = useState(0);
   // 在组件挂载时调用
   useEffect(() => {
     $axios.get("/super/ping").then(res => {
       console.log(res);
+    })
+    $axios.get("/stats").then(res => {
+      setPostNum(res.data.posts ? res.data.posts : 0);
+      setPageNum(res.data.pages ? res.data.pages : 0);
+      setCommentsNum(res.data.comments ? res.data.comments : 0);
+      setUnReadCommentsNum(res.data.unreadComments ? res.data.unreadComments : 0);
+      setAllFriendsNum(res.data.allFriends ? res.data.allFriends : 0);
+      setUnFriendsNum(res.data.unFriends ? res.data.unFriends : 0);
+      setCategoriesNum(res.data.categories ? res.data.categories : 0);
     })
   })
   return (
@@ -92,9 +112,38 @@ const Home: NextPage = () => {
               <Breadcrumb.Item>Home</Breadcrumb.Item>
             </Breadcrumb>
             <Content>
-              
+            <Grid.Row style={{margin: 10}}>
+              <Grid.Col span={6}>
+                {/* post number */}
+                <Statistic title="文章总数" value={postNum} groupSeparator/>
+              </Grid.Col>
+              <Grid.Col span={6}>
+                {/* page number */}
+                <Statistic title="页面总数" value={pageNum} groupSeparator/>
+              </Grid.Col>
+              <Grid.Col span={6}>
+                {/* comments number */}
+                <Statistic title="评论总数" value={commentsNum} groupSeparator/>
+              </Grid.Col>
+              <Grid.Col span={6}>
+                {/* unread comments number */}
+                <Statistic title="未读评论" value={unReadCommentsNum} groupSeparator/>
+              </Grid.Col>
+              <Grid.Col span={6}>
+                {/* all friends number */}
+                <Statistic title="好友总数" value={allFriendsNum} groupSeparator/>
+              </Grid.Col>
+              <Grid.Col span={6}>
+                {/* unfriends number */}
+                <Statistic title="未通过朋友" value={unFriendsNum} groupSeparator/>
+              </Grid.Col>
+              <Grid.Col span={6}>
+                {/* categories number */}
+                <Statistic title="分类总数" value={categoriesNum} groupSeparator/>
+              </Grid.Col>
+            </Grid.Row>
             </Content>
-            <Footer>Footer</Footer>
+            <Footer>GS-admin Beta</Footer>
           </Layout>
         </Layout>
       </Layout>
