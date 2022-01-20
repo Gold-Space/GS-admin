@@ -29,17 +29,19 @@ const Home: NextPage = () => {
   // 在组件挂载时调用
   useEffect(() => {
     if (getToken()) {
-      $axios.get("/super/ping").then(res => {
-        console.log(res);
-      })
-      $axios.get("/stats").then(res => {
-        setPostNum(res.data.posts ? res.data.posts : 0);
-        setPageNum(res.data.pages ? res.data.pages : 0);
-        setCommentsNum(res.data.comments ? res.data.comments : 0);
-        setUnReadCommentsNum(res.data.unreadComments ? res.data.unreadComments : 0);
-        setAllFriendsNum(res.data.allFriends ? res.data.allFriends : 0);
-        setUnFriendsNum(res.data.unFriends ? res.data.unFriends : 0);
-        setCategoriesNum(res.data.categories ? res.data.categories : 0);
+      $axios.get("/super/ping").then(() => {
+        $axios.get("/stats").then(res => {
+          setPostNum(res.data.posts ? res.data.posts : 0);
+          setPageNum(res.data.pages ? res.data.pages : 0);
+          setCommentsNum(res.data.comments ? res.data.comments : 0);
+          setUnReadCommentsNum(res.data.unreadComments ? res.data.unreadComments : 0);
+          setAllFriendsNum(res.data.allFriends ? res.data.allFriends : 0);
+          setUnFriendsNum(res.data.unFriends ? res.data.unFriends : 0);
+          setCategoriesNum(res.data.categories ? res.data.categories : 0);
+        })
+      }).catch(() => {
+        Message.error("未登录")
+        Router.push("/login")
       })
     }else{
       Router.push("/login");
