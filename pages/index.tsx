@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import Router from 'next/router';
 import Side from '../components/Side';
 import $axios from '../utils/request';
+import { getToken } from '../utils/cookie';
 // import style from '../styles/index.module.css';
 
 
@@ -27,18 +28,22 @@ const Home: NextPage = () => {
   const [categoriesNum, setCategoriesNum] = useState(0);
   // 在组件挂载时调用
   useEffect(() => {
-    $axios.get("/super/ping").then(res => {
-      console.log(res);
-    })
-    $axios.get("/stats").then(res => {
-      setPostNum(res.data.posts ? res.data.posts : 0);
-      setPageNum(res.data.pages ? res.data.pages : 0);
-      setCommentsNum(res.data.comments ? res.data.comments : 0);
-      setUnReadCommentsNum(res.data.unreadComments ? res.data.unreadComments : 0);
-      setAllFriendsNum(res.data.allFriends ? res.data.allFriends : 0);
-      setUnFriendsNum(res.data.unFriends ? res.data.unFriends : 0);
-      setCategoriesNum(res.data.categories ? res.data.categories : 0);
-    })
+    if (getToken()) {
+      $axios.get("/super/ping").then(res => {
+        console.log(res);
+      })
+      $axios.get("/stats").then(res => {
+        setPostNum(res.data.posts ? res.data.posts : 0);
+        setPageNum(res.data.pages ? res.data.pages : 0);
+        setCommentsNum(res.data.comments ? res.data.comments : 0);
+        setUnReadCommentsNum(res.data.unreadComments ? res.data.unreadComments : 0);
+        setAllFriendsNum(res.data.allFriends ? res.data.allFriends : 0);
+        setUnFriendsNum(res.data.unFriends ? res.data.unFriends : 0);
+        setCategoriesNum(res.data.categories ? res.data.categories : 0);
+      })
+    }else{
+      Router.push("/login");
+    }
   })
   return (
     <>
@@ -129,15 +134,15 @@ const Home: NextPage = () => {
                 {/* unread comments number */}
                 <Statistic title="未读评论" value={unReadCommentsNum} groupSeparator/>
               </Grid.Col>
-              <Grid.Col span={6}>
+              <Grid.Col span={6} style={{marginTop: 20}}>
                 {/* all friends number */}
                 <Statistic title="好友总数" value={allFriendsNum} groupSeparator/>
               </Grid.Col>
-              <Grid.Col span={6}>
+              <Grid.Col span={6} style={{marginTop: 20}}>
                 {/* unfriends number */}
                 <Statistic title="未通过朋友" value={unFriendsNum} groupSeparator/>
               </Grid.Col>
-              <Grid.Col span={6}>
+              <Grid.Col span={6} style={{marginTop: 20}}>
                 {/* categories number */}
                 <Statistic title="分类总数" value={categoriesNum} groupSeparator/>
               </Grid.Col>
