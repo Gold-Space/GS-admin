@@ -2,9 +2,9 @@
   "name": "gs-admin",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev -p 2222",
     "build": "next build",
-    "start": "next start",
+    "start": "next start -p 2222",
     "lint": "next lint",
     "commit": "git add . && cz && git push",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s",

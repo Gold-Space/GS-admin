@@ -3,18 +3,18 @@
  * @author: Wibus
  * @Date: 2022-01-19 20:34:17
  * @LastEditors: Wibus
- * @LastEditTime: 2022-01-19 20:34:17
+ * @LastEditTime: 2022-01-20 22:30:40
  * Coding With IU
  */
 import dayjs from 'dayjs'
 import Cookies from 'js-cookie'
 
-const TokenKey = 'mx-web-token'
+const TokenKey = 'gs-web-token'
 
 export function getToken(): string | null {
-  return Cookies.get(TokenKey)
-    ? JSON.parse(Cookies.get(TokenKey) as string)
-    : null
+  const token = Cookies.get(TokenKey)
+  const { access_token } = JSON.parse(token ?? '{}')
+  return token ? `bearer ${access_token}` : null
 }
 
 export function setToken(token: string, expires: number | Date) {
