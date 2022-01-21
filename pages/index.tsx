@@ -1,12 +1,13 @@
 import type { NextPage } from 'next'
 import { Layout, Menu, Breadcrumb, Button, Message, Avatar, Typography, Space, Grid, Statistic, Badge } from '@arco-design/web-react';
-import { IconHome, IconCalendar, IconCaretRight, IconCaretLeft } from '@arco-design/web-react/icon';
+import { IconHome, IconCalendar, IconCaretRight, IconCaretLeft, IconEdit } from '@arco-design/web-react/icon';
 import { useEffect, useState } from 'react';
 import Router from 'next/router';
 import Side from '../components/Side';
 import $axios from '../utils/request';
 import { getToken } from '../utils/cookie';
 import { useMount } from 'react-use';
+import { List } from '@arco-design/web-react';
 // import style from '../styles/index.module.css';
 
 
@@ -16,6 +17,12 @@ const Home: NextPage = () => {
   const Content = Layout.Content;
   // 设置状态
   const [collapsed, setCollapsed] = useState(false);
+  // post
+  const [postList, setPostList] = useState([]);
+  const [postSlug, setPostSlug] = useState([]);
+  // page
+  const [pageList, setPageList] = useState([]);
+  const [pageSlug, setPageSlug] = useState([]);
   const [statsNum, setStatsNum] = useState({
     posts: 0,
     pages: 0,
@@ -32,6 +39,20 @@ const Home: NextPage = () => {
         // 应当将数据合为一个对象
         $axios.get("/stats").then(res => {
           setStatsNum(res.data ? res.data : {});
+        })
+        $axios.get("/posts/list?query=limit").then(res => {
+          // 将res.data中每一个对象的title 转存为数组
+          const postTitle = res.data.map((item: { title: string; }) => item.title);
+          const postSlug = res.data.map((item: { slug: string; }) => item.slug);
+          setPostList(postTitle ? postTitle : []);
+          setPostSlug(postSlug ? postSlug : []);
+        })
+        $axios.get("/pages/list?query=limit").then(res => {
+          // 将res.data中每一个对象的title 转存为数组
+          const pageTitle = res.data.map((item: { title: string; }) => item.title);
+          const pageSlug = res.data.map((item: { slug: string; }) => item.slug);
+          setPageList(pageTitle ? pageTitle : []);
+          setPageSlug(pageSlug ? pageSlug : []);
         })
       }).catch(() => {
         Message.error("未登录")
@@ -113,7 +134,7 @@ const Home: NextPage = () => {
               <Breadcrumb.Item>Home</Breadcrumb.Item>
             </Breadcrumb>
             <Content>
-            <Grid.Row style={{margin: 10}}>
+            <Grid.Row style={{margin: 10, marginTop: 30}}>
               <Grid.Col span={6}>
                 {/* post number */}
                 <Statistic title="文章总数" value={statsNum.posts} groupSeparator suffix="篇"/>
@@ -142,7 +163,58 @@ const Home: NextPage = () => {
                 {/* categories number */}
                 <Statistic title="分类总数" value={statsNum.categories} groupSeparator suffix="个"/>
               </Grid.Col>
-              <Grid.Col style={{marginTop: 300}}></Grid.Col>
+            </Grid.Row>
+            <Grid.Row style={{margin:50}}>
+              <Grid.Col span={12}>
+                  <List 
+                  header='最近文章'
+                  // style={{ width: 300 }}
+                  size='small'
+                  dataSource={postList}
+                  render={(item, index) => (
+                    <List.Item key={index}>
+                      <List.Item.Meta
+                        avatar={
+                          <Avatar 
+                          shape='square'
+                          
+                          triggerIcon={<IconEdit />}
+                          style={{ backgroundColor: '#168CFF' }}
+                          triggerType='mask'
+                          onClick={() => Message.info('前往文章编辑')}
+                          >
+                            {item}
+                          </Avatar>
+                        }
+                        title={<a href={`${process.env.NEXT_PUBLIC_WEBURL}/posts/${postSlug[index]}`}>{item}</a>}
+                      />
+                    </List.Item>)}
+                  />
+                </Grid.Col>
+              <Grid.Col span={12}>
+                  <List 
+                  header='已有页面'
+                  style={{ width: 'calc(100% - 30px)', marginLeft: 30}}
+                  size='small'
+                  dataSource={pageList}
+                  render={(item, index) => (
+                  <List.Item key={index}>
+                    <List.Item.Meta
+                      avatar={
+                        <Avatar 
+                          shape='square'
+                          triggerIcon={<IconEdit />}
+                          triggerType='mask'
+                          style={{ backgroundColor: '#FFC72E' }}
+                        >
+                          Page
+                        </Avatar>
+                      }
+                      title={<a href={`${process.env.NEXT_PUBLIC_WEBURL}/pages/${pageSlug[index]}`}>{item}</a>}
+                    />
+                  </List.Item>)}
+                  />
+              </Grid.Col>
             </Grid.Row>
             </Content>
             <Footer>GS-admin Beta</Footer>

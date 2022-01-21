@@ -3,7 +3,7 @@ import "@arco-design/web-react/dist/css/arco.css";
 import type { AppProps } from 'next/app'
 import QP from 'qier-progress'
 import Router from 'next/router';
-import { useCallback, useEffect } from 'react';
+import { useCallback } from 'react';
 import { useMount } from 'react-use';
 import { Message } from '@arco-design/web-react';
 import { getToken } from '../utils/cookie';
