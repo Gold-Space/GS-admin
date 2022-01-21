@@ -21,6 +21,9 @@ function App({ Component, pageProps }: AppProps) {
       // return () => {
       //   clearTimeout(timer);
       // }
+    }else{
+      Message.info("未登录")
+      Router.push("/login")
     }
   })
 
