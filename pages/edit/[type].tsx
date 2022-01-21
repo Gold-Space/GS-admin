@@ -3,7 +3,7 @@
  * @author: Wibus
  * @Date: 2022-01-21 13:13:51
  * @LastEditors: Wibus
- * @LastEditTime: 2022-01-21 16:08:44
+ * @LastEditTime: 2022-01-21 16:46:06
  * Coding With IU
  */
 
@@ -19,13 +19,16 @@ import $axios from "../../utils/request";
 
 
 class propClass {
-  id: number | undefined;
-  prop: string | undefined; //临时存储
-  title: string | undefined;
-  path: string | undefined;
-  content: string | undefined;
-  tags: string | undefined;
-  slug: string | undefined;
+  data!: {
+    id: number | undefined;
+    prop: string | undefined; //临时存储
+    title: string | undefined;
+    path: string | undefined;
+    content: string | undefined;
+    tags: string | undefined;
+    slug: string | undefined;
+  }
+  where: string | undefined
 }
 
 const Edit: NextPage = (props) => {
@@ -37,18 +40,20 @@ const Edit: NextPage = (props) => {
 
   // 设置状态
   const [collapsed, setCollapsed] = useState(false);
-  const [categoryList, setCategoryList] = useState<any[]>([]);
+  const [categoryList, setCategoryList] = useState<any[]>([]);  
 
   let prop = props as propClass;
   // console.log(prop);
 
   useMount(() => {
-    if (prop.id === undefined){
-      if (prop.prop == 'PathYes') {
+    if (prop.data && prop.data.id === undefined){
+      if (prop.data.prop == 'PathYes') {
         Message.info("无法获得信息，正在返回首页");
         Router.push("/");
       }
     }
+    console.log(prop.where);
+    
     $axios.get("category/list?list").then(res => {
       // res.data 内每一个对象的slug和name单独取出为一个对象并组成数组
       let arr = res.data.map((item: { slug: any; name: any; }) => {
@@ -83,14 +88,18 @@ const Edit: NextPage = (props) => {
               autoComplete="off"
               onSubmit={(e) => {
                 // 将e.tags 转换为,
-                let tags = e.tags.join(',');
-                e.tags = tags;
+                if (e.tags) {
+                  e.tags = e.tags.join(',');
+                }
                 console.log(e);
-                const where = prop.path ? 'update' : 'send';
-                $axios.post(`/posts/${where}`, e).then(() => {
+                const SendWhere = e.SendWhere;
+                delete e.SendWhere;
+                console.log(SendWhere)
+                const where = prop.data ? prop.data.path ? 'update' : 'send' : 'send';
+                $axios.post(`/${SendWhere}/${where}`, e).then(() => {
                   Message.success('提交成功');
                   Router.push("/")
-                  Router.push("/edit/posts?path=" + e.path);
+                  Router.push(`/edit/${SendWhere}?path=` + e.path);
                 }).catch((err) => {
                   console.log(err)
                   Message.error('提交失败');
@@ -99,7 +108,7 @@ const Edit: NextPage = (props) => {
               >
                 <FormItem 
                 field="id"
-                initialValue={prop.id}
+                initialValue={prop.data ? prop.data.id : undefined}
                 disabled
                 hidden
                 style={{display: 'none'}}
@@ -108,34 +117,45 @@ const Edit: NextPage = (props) => {
                 </FormItem>
 
                 <FormItem 
+                field="SendWhere"
+                initialValue={prop.where ? prop.where : "posts"}
+                disabled
+                hidden
+                style={{display: 'none'}}
+                >
+                  <Input name='SendWhere' hidden/>
+                </FormItem>
+
+                <FormItem 
                 // label='Title'
                 field='title'
-                initialValue={prop.title}
+                initialValue={prop.data ? prop.data.title : undefined}
                 >
-                  <Input placeholder='Title...' value={prop.title} required/>
+                  <Input placeholder='Title...'required/>
                 </FormItem>
                 <FormItem
                   // label='Path'
                   field='path'
-                  initialValue={prop.path}
+                  initialValue={prop.data ? prop.data.path : undefined}
                 >
-                  <Input placeholder='Path...' value={prop.path} required />
+                  <Input placeholder='Path...' required />
                 </FormItem>
+
                 <FormItem 
                 // label='Content'
                 field='content'
-                initialValue={prop.content}
+                initialValue={prop.data ? prop.data.content : undefined}
                 >
                   <Input.TextArea 
                   placeholder='Content...'
                   style={{height: 250}}
-                  value={prop.content}
                   required />
                 </FormItem>
-                
+
                 <FormItem 
-                field="tags"
-                initialValue={prop.tags ? prop.tags.split(',') : []}
+                field={prop.where=="post" ? "tags" : undefined}
+                initialValue={prop.data ? prop.data.tags ? prop.data.tags.split(',') : [] : []}
+                style={{display: prop.where=="post" ? 'block' : 'none'}}
                 >
                   <InputTag 
                   allowClear
@@ -144,9 +164,10 @@ const Edit: NextPage = (props) => {
                 </FormItem>                
 
                 <FormItem 
-                field="slug"
-                initialValue={prop.slug}
+                field={prop.where=="post" ? "slug" : undefined}
+                initialValue={prop.data ? prop.data.slug : undefined}
                 // style={{width: '300px' }}
+                style={{display: prop.where=="post" ? 'block' : 'none'}}
                 >
                   <Select 
                   placeholder="Slug">
@@ -182,13 +203,25 @@ Edit.getInitialProps = async (ctx) => {
     return {
       id: undefined,
       prop: 'PathYes',
+      where: type
     }
   }
   if (path) {
     res = await $axios.get(`/${type}/${path}`)
-    return res.data ? res.data : {id:undefined,prop:path ? 'PathYes': 'PathNo'};
-  }
-  return {id:undefined,prop:path ? 'PathYes': 'PathNo'};
+    return res.data ? 
+    {
+      data: res.data,
+      where: type
+    } : {
+      id:undefined,
+      prop: path ? 'PathYes': 'PathNo',
+      where: type
+    }
+  };
+  return {
+    id:undefined,
+    prop:path ? 'PathYes': 'PathNo',
+    where: type};
 }
 
 

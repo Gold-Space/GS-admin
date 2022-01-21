@@ -1,14 +1,13 @@
-import { Avatar, Layout, Menu, Message, Space } from "@arco-design/web-react";
-import { IconHome, IconCalendar, IconUser } from "@arco-design/web-react/icon";
+import { Avatar, Layout, Link, Menu, Message, Space } from "@arco-design/web-react";
+import { IconHome, IconCalendar, IconUser, IconEdit, IconFile, IconTool, IconCamera } from "@arco-design/web-react/icon";
 import Router from 'next/router';
-import { useState } from "react";
 
 /*
  * @FilePath: /GS-admin/components/Side.tsx
  * @author: Wibus
  * @Date: 2022-01-20 17:04:46
  * @LastEditors: Wibus
- * @LastEditTime: 2022-01-21 16:11:30
+ * @LastEditTime: 2022-01-21 16:30:26
  * Coding With IU
  */
 function Side(props: any) {
@@ -33,45 +32,36 @@ function Side(props: any) {
       {/* 点击跳转至baidu.com */}
       <MenuItem key='0_1' onClick={() => Router.push('/')}>
         <IconHome />
-        Home
+        首页
       </MenuItem>
-      <MenuItem key='0_2'>
-      <IconUser />
-        Menu 2
-      </MenuItem>
-      <SubMenu
-        key='1'
-        title={
-          <span>
-            <IconCalendar />
-            Navigation 1
-          </span>
-        }
-      >
-        <MenuItem key='1_1'>Menu 1</MenuItem>
-        <MenuItem key='1_2'>Menu 2</MenuItem>
-        <SubMenu key='2' title='Navigation 2'>
-          <MenuItem key='2_1'>Menu 1</MenuItem>
-          <MenuItem key='2_2'>Menu 2</MenuItem>
-        </SubMenu>
-        <SubMenu key='3' title='Navigation 3'>
-          <MenuItem key='3_1'>Menu 1</MenuItem>
-          <MenuItem key='3_2'>Menu 2</MenuItem>
-          <MenuItem key='3_3'>Menu 3</MenuItem>
-        </SubMenu>
-      </SubMenu>
       <SubMenu
         key='4'
         title={
           <span>
-            <IconCalendar />
-            Navigation 4
+            <IconCamera />
+            查些什么
           </span>
         }
       >
-        <MenuItem key='4_1'>Menu 1</MenuItem>
-        <MenuItem key='4_2'>Menu 2</MenuItem>
-        <MenuItem key='4_3'>Menu 3</MenuItem>
+        <MenuItem key='4_1'>None</MenuItem>
+      </SubMenu>
+      <SubMenu
+        key='1'
+        title={
+          <span>
+            <IconTool />
+            写点什么
+          </span>
+        }
+      >
+        <MenuItem key='0_2'>
+      <IconEdit />
+        <a onClick={() => {Router.push("/edit/posts")}}>新增文章</a>
+      </MenuItem>
+      <MenuItem key='0_3'>
+      <IconFile />
+      <a onClick={() => {Router.push("/edit/pages")}}>新增页面</a>
+      </MenuItem>
       </SubMenu>
     </Menu>
   </Sider>
