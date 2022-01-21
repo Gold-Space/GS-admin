@@ -6,6 +6,7 @@ import Router from 'next/router';
 import Side from '../components/Side';
 import $axios from '../utils/request';
 import { getToken } from '../utils/cookie';
+import { useMount } from 'react-use';
 // import style from '../styles/index.module.css';
 
 
@@ -15,29 +16,22 @@ const Home: NextPage = () => {
   const Content = Layout.Content;
   // 设置状态
   const [collapsed, setCollapsed] = useState(false);
-  const [postNum, setPostNum] = useState(0);
-  const [pageNum, setPageNum] = useState(0);
-  const [commentsNum, setCommentsNum] = useState(0);
-  // unReadComments
-  const [unReadCommentsNum, setUnReadCommentsNum] = useState(0);
-  // Allfriends
-  const [allFriendsNum, setAllFriendsNum] = useState(0);
-  // Unfriends
-  const [unFriendsNum, setUnFriendsNum] = useState(0);
-  // categories
-  const [categoriesNum, setCategoriesNum] = useState(0);
+  const [statsNum, setStatsNum] = useState({
+    posts: 0,
+    pages: 0,
+    comments: 0,
+    unReadComments: 0,
+    Allfriends: 0,
+    Unfriends: 0,
+    categories: 0
+  });
   // 在组件挂载时调用
-  useEffect(() => {
+  useMount(() => {
     if (getToken()) {
       $axios.get("/super/ping").then(() => {
+        // 应当将数据合为一个对象
         $axios.get("/stats").then(res => {
-          setPostNum(res.data.posts ? res.data.posts : 0);
-          setPageNum(res.data.pages ? res.data.pages : 0);
-          setCommentsNum(res.data.comments ? res.data.comments : 0);
-          setUnReadCommentsNum(res.data.unreadComments ? res.data.unreadComments : 0);
-          setAllFriendsNum(res.data.allFriends ? res.data.allFriends : 0);
-          setUnFriendsNum(res.data.unFriends ? res.data.unFriends : 0);
-          setCategoriesNum(res.data.categories ? res.data.categories : 0);
+          setStatsNum(res.data ? res.data : {});
         })
       }).catch(() => {
         Message.error("未登录")
@@ -122,32 +116,33 @@ const Home: NextPage = () => {
             <Grid.Row style={{margin: 10}}>
               <Grid.Col span={6}>
                 {/* post number */}
-                <Statistic title="文章总数" value={postNum} groupSeparator/>
+                <Statistic title="文章总数" value={statsNum.posts} groupSeparator suffix="篇"/>
               </Grid.Col>
               <Grid.Col span={6}>
                 {/* page number */}
-                <Statistic title="页面总数" value={pageNum} groupSeparator/>
+                <Statistic title="页面总数" value={statsNum.pages} groupSeparator suffix="页"/>
               </Grid.Col>
               <Grid.Col span={6}>
                 {/* comments number */}
-                <Statistic title="评论总数" value={commentsNum} groupSeparator/>
+                <Statistic title="评论总数" value={statsNum.comments} groupSeparator suffix="条"/>
               </Grid.Col>
               <Grid.Col span={6}>
                 {/* unread comments number */}
-                <Statistic title="未读评论" value={unReadCommentsNum} groupSeparator/>
+                <Statistic title="未读评论" value={statsNum.unReadComments} groupSeparator suffix="条"/>
               </Grid.Col>
               <Grid.Col span={6} style={{marginTop: 20}}>
                 {/* all friends number */}
-                <Statistic title="好友总数" value={allFriendsNum} groupSeparator/>
+                <Statistic title="好友总数" value={statsNum.Allfriends} groupSeparator suffix="位"/>
               </Grid.Col>
               <Grid.Col span={6} style={{marginTop: 20}}>
                 {/* unfriends number */}
-                <Statistic title="未通过朋友" value={unFriendsNum} groupSeparator/>
+                <Statistic title="未通过朋友" value={statsNum.Unfriends} groupSeparator suffix="位" />
               </Grid.Col>
               <Grid.Col span={6} style={{marginTop: 20}}>
                 {/* categories number */}
-                <Statistic title="分类总数" value={categoriesNum} groupSeparator/>
+                <Statistic title="分类总数" value={statsNum.categories} groupSeparator suffix="个"/>
               </Grid.Col>
+              <Grid.Col style={{marginTop: 300}}></Grid.Col>
             </Grid.Row>
             </Content>
             <Footer>GS-admin Beta</Footer>

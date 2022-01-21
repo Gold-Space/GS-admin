@@ -2,12 +2,28 @@ import '../styles/globals.css'
 import "@arco-design/web-react/dist/css/arco.css";
 import type { AppProps } from 'next/app'
 import QP from 'qier-progress'
-import { Router } from 'next/router';
-import { useCallback } from 'react';
+import Router from 'next/router';
+import { useCallback, useEffect } from 'react';
 import { useMount } from 'react-use';
 import { Message } from '@arco-design/web-react';
+import { getToken } from '../utils/cookie';
+import $axios from '../utils/request';
 
 function App({ Component, pageProps }: AppProps) {
+  useMount(() => {
+    if (getToken()) {
+      // 新增计时器
+      setInterval(() => {
+        $axios.get("/super/ping").then(() => {
+          // Router.push("/")
+        }).catch(()=>{Message.error("密钥过期")})
+      }, 30000);
+      // return () => {
+      //   clearTimeout(timer);
+      // }
+    }
+  })
+
   const Progress = new QP({ colorful: false, color: '#27ae60' })
   const registerRouterEvents = useCallback(() => {
     // const getMainWrapper = () => {
