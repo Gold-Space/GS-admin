@@ -122,7 +122,7 @@ const Home: NextPage = () => {
                               {item}
                             </Avatar>
                           }
-                          title={<a href={`/edit/posts?path=${postPath[index]}`}>{item}</a>}
+                          title={<a href={`${process.env.NEXT_PUBLIC_WEBURL}/pages/${pagePath[index]}`}>{item}</a>}
                         />
                       </List.Item>)}
                   />
@@ -142,6 +142,7 @@ const Home: NextPage = () => {
                               triggerIcon={<IconEdit />}
                               triggerType='mask'
                               style={{ backgroundColor: '#FFC72E' }}
+                              onClick={() => Router.push(`/edit/pages?path=${pagePath[index]}`)}
                             >
                               Page
                             </Avatar>
