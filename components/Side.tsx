@@ -8,7 +8,7 @@ import { useState } from "react";
  * @author: Wibus
  * @Date: 2022-01-20 17:04:46
  * @LastEditors: Wibus
- * @LastEditTime: 2022-01-20 19:18:58
+ * @LastEditTime: 2022-01-21 16:11:30
  * Coding With IU
  */
 function Side(props: any) {
@@ -26,8 +26,7 @@ function Side(props: any) {
       // defaultOpenKeys={['1']}
       defaultSelectedKeys={['0_1']}
       onClickMenuItem={(key) =>
-        Message.info({ content: `You select ${key}`, showIcon: true })
-        
+        {}
       }
       style={{ width: '100%' }}
     >

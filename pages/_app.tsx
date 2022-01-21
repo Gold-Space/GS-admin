@@ -71,7 +71,66 @@ function App({ Component, pageProps }: AppProps) {
   useMount(() => {
     registerRouterEvents()
   })
-  return <Component {...pageProps} />
+  return (
+    <>
+     <style>
+        {`
+      .layout-collapse {
+        height: 100vh;
+        border: 1px solid var(--color-border);
+        background: var(--color-fill-2);
+      }
+      
+      .layout-collapse .arco-layout-sider .logo {
+        height: 32px;
+        margin: 12px 8px;
+        background: rgba(255, 255, 255, 0.2);
+      }
+      
+      .layout-collapse .arco-layout-sider-light .logo {
+        background: var(--color-fill-2);
+      }
+      
+      .layout-collapse .arco-layout-footer,
+      .layout-collapse .arco-layout-content {
+        color: var(--color-white);
+        text-align: center;
+        font-stretch: condensed;
+        font-size: 16px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+      
+      .layout-collapse .arco-layout-footer {
+        color: var(--color-text-2);
+        height: 48px;
+        line-height: 48px;
+        font-weight: 400;
+        font-size: 14px;
+      }
+      
+      .layout-collapse .arco-layout-content {
+        background: var(--color-bg-3);
+        color: var(--color-text-2);
+        font-weight: 400;
+        font-size: 14px;
+      }
+      
+      .layout-collapse .arco-layout-header {
+        height: 64px;
+        line-height: 64px;
+        background: var(--color-bg-3);
+      }
+      
+      .layout-collapse .arco-layout-header .trigger {
+        margin-left: 20px;
+      }
+      `}
+      </style>
+      <Component {...pageProps} />
+    </>  
+  )
 }
 
 export default App

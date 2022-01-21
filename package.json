@@ -26,7 +26,8 @@
     "qier-progress": "^1.0.4",
     "react": "17.0.2",
     "react-dom": "17.0.2",
-    "react-use": "^17.3.2"
+    "react-use": "^17.3.2",
+    "vditor": "^3.8.10"
   },
   "devDependencies": {
     "@types/js-cookie": "^3.0.1",

@@ -19,10 +19,10 @@ const Home: NextPage = () => {
   const [collapsed, setCollapsed] = useState(false);
   // post
   const [postList, setPostList] = useState([]);
-  const [postSlug, setPostSlug] = useState([]);
+  const [postPath, setpostPath] = useState([]);
   // page
   const [pageList, setPageList] = useState([]);
-  const [pageSlug, setPageSlug] = useState([]);
+  const [pagePath, setpagePath] = useState([]);
   const [statsNum, setStatsNum] = useState({
     posts: 0,
     pages: 0,
@@ -32,95 +32,31 @@ const Home: NextPage = () => {
     Unfriends: 0,
     categories: 0
   });
-  // 在组件挂载时调用
   useMount(() => {
-    if (getToken()) {
-      $axios.get("/super/ping").then(() => {
-        // 应当将数据合为一个对象
-        $axios.get("/stats").then(res => {
-          setStatsNum(res.data ? res.data : {});
-        })
-        $axios.get("/posts/list?query=limit").then(res => {
-          // 将res.data中每一个对象的title 转存为数组
-          const postTitle = res.data.map((item: { title: string; }) => item.title);
-          const postSlug = res.data.map((item: { slug: string; }) => item.slug);
-          setPostList(postTitle ? postTitle : []);
-          setPostSlug(postSlug ? postSlug : []);
-        })
-        $axios.get("/pages/list?query=limit").then(res => {
-          // 将res.data中每一个对象的title 转存为数组
-          const pageTitle = res.data.map((item: { title: string; }) => item.title);
-          const pageSlug = res.data.map((item: { slug: string; }) => item.slug);
-          setPageList(pageTitle ? pageTitle : []);
-          setPageSlug(pageSlug ? pageSlug : []);
-        })
-      }).catch(() => {
-        Message.error("未登录")
-        Router.push("/login")
-      })
-    }else{
-      Router.push("/login");
-    }
+    $axios.get("/stats").then(res => {
+      setStatsNum(res.data ? res.data : {});
+    })
+    $axios.get("/posts/list?query=limit").then(res => {
+      // 将res.data中每一个对象的title 转存为数组
+      const postTitle = res.data.map((item: { title: string; }) => item.title);
+      const postPath = res.data.map((item: { path: string; }) => item.path);
+      setPostList(postTitle ? postTitle : []);
+      setpostPath(postPath ? postPath : []);
+      console.log(postPath);
+    })
+    $axios.get("/pages/list?query=limit").then(res => {
+      // 将res.data中每一个对象的title 转存为数组
+      const pageTitle = res.data.map((item: { title: string; }) => item.title);
+      const pagePath = res.data.map((item: { path: string; }) => item.path);
+      setPageList(pageTitle ? pageTitle : []);
+      setpagePath(pagePath ? pagePath : []);
+    })
   })
+
   return (
     <>
-    <style>
-      {`
-      .layout-collapse {
-        height: 100vh;
-        border: 1px solid var(--color-border);
-        background: var(--color-fill-2);
-      }
-      
-      .layout-collapse .arco-layout-sider .logo {
-        height: 32px;
-        margin: 12px 8px;
-        background: rgba(255, 255, 255, 0.2);
-      }
-      
-      .layout-collapse .arco-layout-sider-light .logo {
-        background: var(--color-fill-2);
-      }
-      
-      .layout-collapse .arco-layout-footer,
-      .layout-collapse .arco-layout-content {
-        color: var(--color-white);
-        text-align: center;
-        font-stretch: condensed;
-        font-size: 16px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-      }
-      
-      .layout-collapse .arco-layout-footer {
-        color: var(--color-text-2);
-        height: 48px;
-        line-height: 48px;
-        font-weight: 400;
-        font-size: 14px;
-      }
-      
-      .layout-collapse .arco-layout-content {
-        background: var(--color-bg-3);
-        color: var(--color-text-2);
-        font-weight: 400;
-        font-size: 14px;
-      }
-      
-      .layout-collapse .arco-layout-header {
-        height: 64px;
-        line-height: 64px;
-        background: var(--color-bg-3);
-      }
-      
-      .layout-collapse .arco-layout-header .trigger {
-        margin-left: 20px;
-      }
-      `}
-    </style>
-    <Layout className='layout-collapse arco-layout-has-sider'>
-        <Side 
+      <Layout className='layout-collapse arco-layout-has-sider'>
+        <Side
           collapsed={collapsed}
         />
         <Layout>
@@ -134,94 +70,94 @@ const Home: NextPage = () => {
               <Breadcrumb.Item>Home</Breadcrumb.Item>
             </Breadcrumb>
             <Content>
-            <Grid.Row style={{margin: 10, marginTop: 30}}>
-              <Grid.Col span={6}>
-                {/* post number */}
-                <Statistic title="文章总数" value={statsNum.posts} groupSeparator suffix="篇"/>
-              </Grid.Col>
-              <Grid.Col span={6}>
-                {/* page number */}
-                <Statistic title="页面总数" value={statsNum.pages} groupSeparator suffix="页"/>
-              </Grid.Col>
-              <Grid.Col span={6}>
-                {/* comments number */}
-                <Statistic title="评论总数" value={statsNum.comments} groupSeparator suffix="条"/>
-              </Grid.Col>
-              <Grid.Col span={6}>
-                {/* unread comments number */}
-                <Statistic title="未读评论" value={statsNum.unReadComments} groupSeparator suffix="条"/>
-              </Grid.Col>
-              <Grid.Col span={6} style={{marginTop: 20}}>
-                {/* all friends number */}
-                <Statistic title="好友总数" value={statsNum.Allfriends} groupSeparator suffix="位"/>
-              </Grid.Col>
-              <Grid.Col span={6} style={{marginTop: 20}}>
-                {/* unfriends number */}
-                <Statistic title="未通过朋友" value={statsNum.Unfriends} groupSeparator suffix="位" />
-              </Grid.Col>
-              <Grid.Col span={6} style={{marginTop: 20}}>
-                {/* categories number */}
-                <Statistic title="分类总数" value={statsNum.categories} groupSeparator suffix="个"/>
-              </Grid.Col>
-            </Grid.Row>
-            <Grid.Row style={{margin:50}}>
-              <Grid.Col span={12}>
-                  <List 
-                  header='最近文章'
-                  // style={{ width: 300 }}
-                  size='small'
-                  dataSource={postList}
-                  render={(item, index) => (
-                    <List.Item key={index}>
-                      <List.Item.Meta
-                        avatar={
-                          <Avatar 
-                          shape='square'
-                          
-                          triggerIcon={<IconEdit />}
-                          style={{ backgroundColor: '#168CFF' }}
-                          triggerType='mask'
-                          onClick={() => Message.info('前往文章编辑')}
-                          >
-                            {item}
-                          </Avatar>
-                        }
-                        title={<a href={`${process.env.NEXT_PUBLIC_WEBURL}/posts/${postSlug[index]}`}>{item}</a>}
-                      />
-                    </List.Item>)}
+              <Grid.Row style={{ margin: 10, marginTop: 30 }}>
+                <Grid.Col span={6}>
+                  {/* post number */}
+                  <Statistic title="文章总数" value={statsNum.posts} groupSeparator suffix="篇" />
+                </Grid.Col>
+                <Grid.Col span={6}>
+                  {/* page number */}
+                  <Statistic title="页面总数" value={statsNum.pages} groupSeparator suffix="页" />
+                </Grid.Col>
+                <Grid.Col span={6}>
+                  {/* comments number */}
+                  <Statistic title="评论总数" value={statsNum.comments} groupSeparator suffix="条" />
+                </Grid.Col>
+                <Grid.Col span={6}>
+                  {/* unread comments number */}
+                  <Statistic title="未读评论" value={statsNum.unReadComments} groupSeparator suffix="条" />
+                </Grid.Col>
+                <Grid.Col span={6} style={{ marginTop: 20 }}>
+                  {/* all friends number */}
+                  <Statistic title="好友总数" value={statsNum.Allfriends} groupSeparator suffix="位" />
+                </Grid.Col>
+                <Grid.Col span={6} style={{ marginTop: 20 }}>
+                  {/* unfriends number */}
+                  <Statistic title="未通过朋友" value={statsNum.Unfriends} groupSeparator suffix="位" />
+                </Grid.Col>
+                <Grid.Col span={6} style={{ marginTop: 20 }}>
+                  {/* categories number */}
+                  <Statistic title="分类总数" value={statsNum.categories} groupSeparator suffix="个" />
+                </Grid.Col>
+              </Grid.Row>
+              <Grid.Row style={{ margin: 50 }}>
+                <Grid.Col span={12}>
+                  <List
+                    header='最近文章'
+                    // style={{ width: 300 }}
+                    size='small'
+                    dataSource={postList}
+                    render={(item, index) => (
+                      <List.Item key={index}>
+                        <List.Item.Meta
+                          avatar={
+                            <Avatar
+                              shape='square'
+
+                              triggerIcon={<IconEdit />}
+                              style={{ backgroundColor: '#168CFF' }}
+                              triggerType='mask'
+                              onClick={() => Router.push(`/edit/posts?path=${postPath[index]}`)}
+                            >
+                              {item}
+                            </Avatar>
+                          }
+                          title={<a href={`/edit/posts?path=${postPath[index]}`}>{item}</a>}
+                        />
+                      </List.Item>)}
                   />
                 </Grid.Col>
-              <Grid.Col span={12}>
-                  <List 
-                  header='已有页面'
-                  style={{ width: 'calc(100% - 30px)', marginLeft: 30}}
-                  size='small'
-                  dataSource={pageList}
-                  render={(item, index) => (
-                  <List.Item key={index}>
-                    <List.Item.Meta
-                      avatar={
-                        <Avatar 
-                          shape='square'
-                          triggerIcon={<IconEdit />}
-                          triggerType='mask'
-                          style={{ backgroundColor: '#FFC72E' }}
-                        >
-                          Page
-                        </Avatar>
-                      }
-                      title={<a href={`${process.env.NEXT_PUBLIC_WEBURL}/pages/${pageSlug[index]}`}>{item}</a>}
-                    />
-                  </List.Item>)}
+                <Grid.Col span={12}>
+                  <List
+                    header='已有页面'
+                    style={{ width: 'calc(100% - 30px)', marginLeft: 30 }}
+                    size='small'
+                    dataSource={pageList}
+                    render={(item, index) => (
+                      <List.Item key={index}>
+                        <List.Item.Meta
+                          avatar={
+                            <Avatar
+                              shape='square'
+                              triggerIcon={<IconEdit />}
+                              triggerType='mask'
+                              style={{ backgroundColor: '#FFC72E' }}
+                            >
+                              Page
+                            </Avatar>
+                          }
+                          title={<a href={`${process.env.NEXT_PUBLIC_WEBURL}/pages/${pagePath[index]}`}>{item}</a>}
+                        />
+                      </List.Item>)}
                   />
-              </Grid.Col>
-            </Grid.Row>
+                </Grid.Col>
+              </Grid.Row>
             </Content>
             <Footer>GS-admin Beta</Footer>
           </Layout>
         </Layout>
       </Layout>
-      </>
+    </>
   )
 }
 
