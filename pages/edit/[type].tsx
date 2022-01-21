@@ -3,7 +3,7 @@
  * @author: Wibus
  * @Date: 2022-01-21 13:13:51
  * @LastEditors: Wibus
- * @LastEditTime: 2022-01-21 16:46:06
+ * @LastEditTime: 2022-01-21 17:06:13
  * Coding With IU
  */
 
@@ -19,6 +19,7 @@ import $axios from "../../utils/request";
 
 
 class propClass {
+  ok: boolean | undefined;
   data!: {
     id: number | undefined;
     prop: string | undefined; //临时存储
@@ -46,13 +47,13 @@ const Edit: NextPage = (props) => {
   // console.log(prop);
 
   useMount(() => {
-    if (prop.data && prop.data.id === undefined){
-      if (prop.data.prop == 'PathYes') {
+    if (!prop.ok){ // 当ok为false时，说明请求有问题
+      if (prop.data ? prop.data.prop == 'PathYes' ? true : false : false) {
         Message.info("无法获得信息，正在返回首页");
         Router.push("/");
       }
     }
-    console.log(prop.where);
+    // console.log(prop.where);
     
     $axios.get("category/list?list").then(res => {
       // res.data 内每一个对象的slug和name单独取出为一个对象并组成数组
@@ -94,7 +95,7 @@ const Edit: NextPage = (props) => {
                 console.log(e);
                 const SendWhere = e.SendWhere;
                 delete e.SendWhere;
-                console.log(SendWhere)
+                // console.log(SendWhere)
                 const where = prop.data ? prop.data.path ? 'update' : 'send' : 'send';
                 $axios.post(`/${SendWhere}/${where}`, e).then(() => {
                   Message.success('提交成功');
@@ -201,27 +202,36 @@ Edit.getInitialProps = async (ctx) => {
   let res: any
   if (type !== "posts" && type !== "pages") {
     return {
-      id: undefined,
+      ok: false,
       prop: 'PathYes',
-      where: type
+      where: type,
+      mes: 'type错误'
     }
   }
   if (path) {
     res = await $axios.get(`/${type}/${path}`)
+    console.log(res)
     return res.data ? 
     {
+      ok: true,
       data: res.data,
-      where: type
+      where: type,
+      mes: '获取成功'
     } : {
-      id:undefined,
-      prop: path ? 'PathYes': 'PathNo',
-      where: type
+      ok: false,
+      prop: 'PathYes',
+      where: type,
+      mes: '数据获取失败，但是type是正确的'
     }
-  };
-  return {
-    id:undefined,
-    prop:path ? 'PathYes': 'PathNo',
-    where: type};
+  }else{
+    return {
+      ok: true,
+      prop: "PathNo",
+      where: type,
+      mes: 'Path不存在，因此默认为创建模式'
+    };
+  }
+  
 }
 
 
