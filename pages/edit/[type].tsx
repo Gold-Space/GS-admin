@@ -3,7 +3,7 @@
  * @author: Wibus
  * @Date: 2022-01-21 13:13:51
  * @LastEditors: Wibus
- * @LastEditTime: 2022-01-21 17:06:13
+ * @LastEditTime: 2022-01-21 21:41:31
  * Coding With IU
  */
 
@@ -154,9 +154,9 @@ const Edit: NextPage = (props) => {
                 </FormItem>
 
                 <FormItem 
-                field={prop.where=="post" ? "tags" : undefined}
+                field={prop.where=="posts" ? "tags" : undefined}
                 initialValue={prop.data ? prop.data.tags ? prop.data.tags.split(',') : [] : []}
-                style={{display: prop.where=="post" ? 'block' : 'none'}}
+                style={{display: prop.where=="posts" ? 'block' : 'none'}}
                 >
                   <InputTag 
                   allowClear
@@ -165,10 +165,10 @@ const Edit: NextPage = (props) => {
                 </FormItem>                
 
                 <FormItem 
-                field={prop.where=="post" ? "slug" : undefined}
+                field={prop.where=="posts" ? "slug" : undefined}
                 initialValue={prop.data ? prop.data.slug : undefined}
                 // style={{width: '300px' }}
-                style={{display: prop.where=="post" ? 'block' : 'none'}}
+                style={{display: prop.where=="posts" ? 'block' : 'none'}}
                 >
                   <Select 
                   placeholder="Slug">
@@ -210,7 +210,7 @@ Edit.getInitialProps = async (ctx) => {
   }
   if (path) {
     res = await $axios.get(`/${type}/${path}`)
-    console.log(res)
+    // console.log(res)
     return res.data ? 
     {
       ok: true,

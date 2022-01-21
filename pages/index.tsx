@@ -42,7 +42,7 @@ const Home: NextPage = () => {
       const postPath = res.data.map((item: { path: string; }) => item.path);
       setPostList(postTitle ? postTitle : []);
       setpostPath(postPath ? postPath : []);
-      console.log(postPath);
+      // console.log(postPath);
     })
     $axios.get("/pages/list?query=limit").then(res => {
       // 将res.data中每一个对象的title 转存为数组
