@@ -1,4 +1,4 @@
-# GoldSpace Admin V1
+# GoldenSpace Admin V1
 
 A lovely AdminWeb built with React & Tailwind CSS
 
