@@ -3,7 +3,7 @@
  * @author: Wibus
  * @Date: 2022-01-19 20:37:52
  * @LastEditors: Wibus
- * @LastEditTime: 2022-01-20 22:55:21
+ * @LastEditTime: 2022-01-22 20:25:40
  * Coding With IU
  */
 
@@ -102,7 +102,7 @@ const LoginView: NextPage = () => {
           border-radius: 1.5rem;
           letter-spacing: .05em;
         }
-        .arco-input {
+        .arco-input, .arco-input-inner-wrapper {
           background-color: inherit !important;
       }
       `}
@@ -141,7 +141,7 @@ const LoginView: NextPage = () => {
               field='password'
               wrapperCol={{}}
             >
-              <Input placeholder="输入密码" />
+              <Input.Password visibilityToggle={false} placeholder="输入密码" />
             </Form.Item>
             <Form.Item
               
