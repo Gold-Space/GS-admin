@@ -3,7 +3,7 @@
  * @author: Wibus
  * @Date: 2022-01-21 13:13:51
  * @LastEditors: Wibus
- * @LastEditTime: 2022-01-21 21:41:31
+ * @LastEditTime: 2022-02-01 20:34:22
  * Coding With IU
  */
 
@@ -18,9 +18,9 @@ import Side from "../../components/Side";
 import $axios from "../../utils/request";
 
 
-class propClass {
+type propClass = {
   ok: boolean | undefined;
-  data!: {
+  data: {
     id: number | undefined;
     prop: string | undefined; //临时存储
     title: string | undefined;
@@ -49,8 +49,8 @@ const Edit: NextPage = (props) => {
   useMount(() => {
     if (!prop.ok){ // 当ok为false时，说明请求有问题
       if (prop.data ? prop.data.prop == 'PathYes' ? true : false : false) {
-        Message.info("无法获得信息，正在返回首页");
-        Router.push("/");
+        Message.info("无法获得信息，正在返回上一页");
+        Router.back();
       }
     }
     // console.log(prop.where);
@@ -82,6 +82,7 @@ const Edit: NextPage = (props) => {
           <Layout style={{ padding: '0 24px' }}>
             <Breadcrumb style={{ margin: '16px 0' }}>
               <Breadcrumb.Item>Home</Breadcrumb.Item>
+              <Breadcrumb.Item>edit</Breadcrumb.Item>
             </Breadcrumb>
             <Content >
               <Form 
@@ -185,7 +186,7 @@ const Edit: NextPage = (props) => {
                 </FormItem>
 
                 <FormItem>
-                  <Button type='primary' htmlType="submit">Submit</Button>
+                  <Button type='primary' htmlType="submit">提交</Button>
                 </FormItem>
               </Form>
             </Content>

@@ -3,7 +3,7 @@
  * @author: Wibus
  * @Date: 2022-01-19 20:31:06
  * @LastEditors: Wibus
- * @LastEditTime: 2022-01-20 22:23:58
+ * @LastEditTime: 2022-02-01 14:15:35
  * Coding With IU
  */
 import { Message } from '@arco-design/web-react'
@@ -30,7 +30,7 @@ service.interceptors.response.use(
   undefined,
   (error: AxiosError<Record<string, any> | undefined>) => {
     // if (process.env.NODE_ENV === 'development') {
-    console.log(error.message)
+    console.error(error.message)
     // }
 
     if (

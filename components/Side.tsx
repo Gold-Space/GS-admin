@@ -7,7 +7,7 @@ import Router from 'next/router';
  * @author: Wibus
  * @Date: 2022-01-20 17:04:46
  * @LastEditors: Wibus
- * @LastEditTime: 2022-01-21 16:30:26
+ * @LastEditTime: 2022-01-29 12:27:41
  * Coding With IU
  */
 function Side(props: any) {
@@ -43,7 +43,18 @@ function Side(props: any) {
           </span>
         }
       >
-        <MenuItem key='4_1'>None</MenuItem>
+        <MenuItem key='4_1'>
+          <IconFile />
+          <a>全部文章</a>
+        </MenuItem>
+        <MenuItem key='4_2'>
+          <IconEdit />
+          <a>全部页面</a>
+        </MenuItem>
+        <MenuItem key='4_3'>
+          <IconTool />
+          <a>全部分类</a>
+        </MenuItem>
       </SubMenu>
       <SubMenu
         key='1'
@@ -56,7 +67,7 @@ function Side(props: any) {
       >
         <MenuItem key='0_2'>
       <IconEdit />
-        <a onClick={() => {Router.push("/edit/posts")}}>新增文章</a>
+        <a onClick={() => {Router.push('/edit/posts')}}>新增文章</a>
       </MenuItem>
       <MenuItem key='0_3'>
       <IconFile />

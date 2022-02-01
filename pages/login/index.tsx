@@ -3,7 +3,7 @@
  * @author: Wibus
  * @Date: 2022-01-19 20:37:52
  * @LastEditors: Wibus
- * @LastEditTime: 2022-01-22 20:25:40
+ * @LastEditTime: 2022-02-01 14:15:37
  * Coding With IU
  */
 
@@ -116,7 +116,7 @@ const LoginView: NextPage = () => {
           size="large" 
           autoComplete="off"
           onSubmit={(v) => {
-            console.log(v);
+            // console.log(v);
             $axios.post('/auth/login', v).then(res => {
               const a = res as any;
               Message.success("登录成功，正在跳转");
@@ -124,7 +124,7 @@ const LoginView: NextPage = () => {
               Router.push("/");
             }).catch(err => {
               Message.error("登录失败，请前往控制台查看错误");
-              console.log(err); 
+              console.error(err); 
             }
             )}
           }>
