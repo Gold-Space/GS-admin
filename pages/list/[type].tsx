@@ -3,7 +3,7 @@
  * @author: Wibus
  * @Date: 2022-01-29 12:36:38
  * @LastEditors: Wibus
- * @LastEditTime: 2022-02-01 20:36:15
+ * @LastEditTime: 2022-02-01 21:38:41
  * Coding With IU
  */
 import { Layout, Form, Breadcrumb, Button, List, Avatar } from "@arco-design/web-react";
@@ -17,19 +17,31 @@ import Side from "../../components/Side";
 import $axios from "../../utils/request";
 
 
-const Lists: NextPage = (props: any) => {
+const Lists: NextPage = (anyProps: any) => {
+
+  const props = anyProps.data
 
   const Header = Layout.Header;
   const Content = Layout.Content;
-  const FormItem = Form.Item;
   
   // 设置状态
   const [collapsed, setCollapsed] = useState(false);
 
-  process.env.NODE_ENV === 'development' ? console.log(props.data) : null;
-
+  console.log(anyProps)
   return (
     <>
+      <style>
+        {`
+        .list-actions {
+          margin-top: 20px;
+          margin-left: 20px;
+        }
+        .btn{
+          width: 100px;
+          margin: 20px
+        }
+        `}
+      </style>
       <Layout className='layout-collapse arco-layout-has-sider'>
         <Side
           collapsed={collapsed}
@@ -45,11 +57,13 @@ const Lists: NextPage = (props: any) => {
               <Breadcrumb.Item>Home</Breadcrumb.Item>
               <Breadcrumb.Item>List</Breadcrumb.Item>
             </Breadcrumb>
-              <Content>
-              {console.log(props) }
+              <Content style={{display: "inline"}}>
               <List
-                className="list-demo-actions"
-                style={{ width: 700 }}
+                virtualListProps={{
+                  height: 400,
+                }}
+                className="list-actions"
+                style={{ width: 620 }}
                 dataSource={props.title}
                 render={(item, index) => (
                   <List.Item key={index}>
@@ -69,7 +83,8 @@ const Lists: NextPage = (props: any) => {
                     />
                   </List.Item>)}
               />
-              
+              { anyProps.nowPage == 1 ? null : <Button type='outline' className={'btn_up btn'} onClick={() => {Router.push(`/list/${anyProps.type}?page=${anyProps.nowPage - 1}`)}}> 上一页 </Button> }
+              { anyProps.next ? <Button type='outline' className={"btn_next btn"} onClick={() => {Router.push(`/list/${anyProps.type}?page=${anyProps.nowPage + 1}`)}}>下一页</Button> : null}
               </Content>
               <Footers />
           </Layout>
@@ -80,30 +95,27 @@ const Lists: NextPage = (props: any) => {
 }
 
 Lists.getInitialProps = async (ctx) => {
-  const { page, type } = ctx.query
-  let res: any
+  const { page, type } = ctx.query as any
   if (!type){
     () => {return {"ok": 0}}
   }
-  console.log(page)
-  if (page) {
-    return await $axios.get(`${type}/list?type=limit&page=${page}}`).then( (res) => {
-      return {
-        title: res.data.map((item: { title: string; }) => item.title),
-        path: res.data.map((item: { path: string; }) => item.path)
-      }
-    }).catch(
-      () => {return {"ok": 0, "mes": "page not found"}}
-    )
-  }else{
-    return await $axios.get(`${type}/list?type=limit&page=1}`).then( (res) => {
-      return {
-        title: res.data.map((item: { title: string; }) => item.title),
-        path: res.data.map((item: { path: string; }) => item.path)
-      }
-    }).catch(
-      () => {return {"ok": 0, "mes": "first page not found"}}
-    )
+  let pages = page ? page : 1
+  const data = await $axios.get(`${type}/list?type=limit&page=${pages}`).then( (res) => {
+    return {
+      title: res.data.map((item: { title: string; }) => item.title),
+      path: res.data.map((item: { path: string; }) => item.path)
+    }
+  }).catch(
+    () => {return {"ok": 0, "mes": "page not found"}}
+  )
+  const nextPage = await $axios.get(`${type}/list?type=limit&page=${pages + 1}`).then(res => {
+    return res.data.map((item: { title: string; }) => item.title).length ? true : false
+  })
+  return {
+    type: type, // 种类
+    nowPage: pages, // 当前页
+    data: data, // 数据
+    next: nextPage // 下一页情况
   }
 }
 
