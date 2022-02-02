@@ -4,11 +4,11 @@
  * @author: Wibus
  * @Date: 2022-01-29 12:36:38
  * @LastEditors: Wibus
- * @LastEditTime: 2022-02-02 13:20:55
+ * @LastEditTime: 2022-02-02 21:45:58
  * Coding With IU
  */
 import { Layout, Form, Breadcrumb, Button, List, Avatar, Message, Popconfirm } from "@arco-design/web-react";
-import { IconCaretRight, IconCaretLeft, IconEdit } from "@arco-design/web-react/icon";
+import { IconCaretRight, IconCaretLeft, IconEdit, IconDelete } from "@arco-design/web-react/icon";
 import { NextPage } from "next"
 import Router from "next/router";
 import { ReactChild, ReactElement, ReactNode, useState } from "react";
@@ -28,24 +28,51 @@ const Lists: NextPage = (anyProps: any) => {
   // 设置状态
   const [collapsed, setCollapsed] = useState(false);
 
+  let [renderPath, setRenderPath] = useState(0);
+
   const render = (action: ReactNode[],item: any, index: any) => (
-    <List.Item key={index} actions={action}>
-    <List.Item.Meta
-      avatar={
-        <Avatar
-          shape='square'
-          triggerIcon={<IconEdit />}
-          style={{ backgroundColor: 'rgb(122 113 88)' }}
-          triggerType='mask'
-          onClick={() => Router.push(`/edit/posts?path=${props.path[index]}`)}
+    <>
+      <List.Item key={index} actions={action} extra={[
+        <div className="arco-list-item-action">
+        <span className='list-actions-icon' onClick={() => {Router.push(`/edit/posts?path=${props.path[index]}`)}}>
+          <IconEdit />
+        </span>
+        <Popconfirm
+          className='list-actions-button'
+          title='真的要删除吗?'
+          onOk={() => {
+            Message.loading({ content: '删除中' });
+            $axios.delete(`${anyProps.type}/delete/${props.path[index]}`).then(res => {
+              Message.success({ content: "删除成功" });
+              // 重新渲染页面
+              Router.reload();
+            })
+          }}
+          // onCancel={() => {Router.reload();}}
         >
-          Post
-        </Avatar>
-      }
-      title={<a href={`${process.env.NEXT_PUBLIC_WEBURL}/posts/${props.path[index]}`}>{item}</a>}
-      
-    />
-  </List.Item>
+          <span className='list-actions-icon'><IconDelete /></span>
+        </Popconfirm>
+        </div>
+      ]}>
+
+      <List.Item.Meta
+        avatar={
+          <Avatar
+            shape='square'
+            triggerIcon={<IconEdit />}
+            style={{ backgroundColor: 'rgb(122 113 88)' }}
+            triggerType='mask'
+            onClick={() => Router.push(`/edit/posts?path=${props.path[index]}`)}
+          >
+            Post
+          </Avatar>
+        }
+        title={<a href={`${process.env.NEXT_PUBLIC_WEBURL}/posts/${props.path[index]}`}>{item}</a>}
+        
+      ></List.Item.Meta>
+    </List.Item>
+    
+    </>
   
   )
   
@@ -61,24 +88,21 @@ const Lists: NextPage = (anyProps: any) => {
           width: 100px;
           margin: 20px
         }
-        .list-actions-button {
-          position: relative;
-          padding: 0 4px;
-          border-radius: 2px;
-          color: rgb(var(--arcoblue-6));
-          cursor: pointer;
+        .list-actions-icon {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 24px;
+          height: 24px;
+          border-radius: 50%;
           transition: all 0.1s;
+          margin-left: 10px
         }
         
-        .list-actions  .arco-list-item-action li:not(:last-child) .list-actions-button::after {
-          content: '';
-          position: absolute;
-          top: 3px;
-          right: -12px;
-          width: 1px;
-          height: 20px;
+        .list-actions-icon:hover {
           background-color: var(--color-fill-3);
         }
+        
         `}
       </style>
       <Layout className='layout-collapse arco-layout-has-sider'>
@@ -104,23 +128,7 @@ const Lists: NextPage = (anyProps: any) => {
                 className="list-actions"
                 style={{ width: "calc(100% - 40px)", borderWidth: 0}}
                 dataSource={props.title}
-                render={render.bind(null, [
-                  <Button className='list-actions-button' onClick={() => {Router.push(`/edit/posts?path=${null}`)}}>Edit</Button>,
-                  // <span className='list-actions-button' onClick={() => {Delete()}}>Delete</span>,
-                  <Popconfirm
-                    className='list-actions-button'
-                    title='真的要删除吗?'
-                    onOk={() => {
-                      Message.info({ content: 'ok' });
-                    }}
-                    onCancel={() => {
-                      // Message.error({ content: 'cancel' });
-                    }}
-                  >
-                    <Button>Delete</Button>
-                  </Popconfirm>
-
-                ])}
+                render={render.bind(null, [])}
               />
               { anyProps.nowPage == 1 ? null : <Button type='outline' className={'btn_up btn'} onClick={() => {Router.push(`/list/${anyProps.type}?page=${Number(anyProps.nowPage) - 1}`)}}> 上一页 </Button> }
               { anyProps.next ? <Button type='outline' className={"btn_next btn"} onClick={() => {Router.push(`/list/${anyProps.type}?page=${Number(anyProps.nowPage) + 1}`)}}>下一页</Button> : null}
