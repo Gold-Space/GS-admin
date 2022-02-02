@@ -1,16 +1,17 @@
+/* eslint-disable react/jsx-key */
 /*
  * @FilePath: /GS-admin/pages/list/[type].tsx
  * @author: Wibus
  * @Date: 2022-01-29 12:36:38
  * @LastEditors: Wibus
- * @LastEditTime: 2022-02-01 21:38:41
+ * @LastEditTime: 2022-02-02 13:20:55
  * Coding With IU
  */
-import { Layout, Form, Breadcrumb, Button, List, Avatar } from "@arco-design/web-react";
+import { Layout, Form, Breadcrumb, Button, List, Avatar, Message, Popconfirm } from "@arco-design/web-react";
 import { IconCaretRight, IconCaretLeft, IconEdit } from "@arco-design/web-react/icon";
 import { NextPage } from "next"
 import Router from "next/router";
-import { useState } from "react";
+import { ReactChild, ReactElement, ReactNode, useState } from "react";
 import { useMount } from "react-use";
 import { Footers } from "../../components/Footer";
 import Side from "../../components/Side";
@@ -27,7 +28,27 @@ const Lists: NextPage = (anyProps: any) => {
   // 设置状态
   const [collapsed, setCollapsed] = useState(false);
 
-  console.log(anyProps)
+  const render = (action: ReactNode[],item: any, index: any) => (
+    <List.Item key={index} actions={action}>
+    <List.Item.Meta
+      avatar={
+        <Avatar
+          shape='square'
+          triggerIcon={<IconEdit />}
+          style={{ backgroundColor: 'rgb(122 113 88)' }}
+          triggerType='mask'
+          onClick={() => Router.push(`/edit/posts?path=${props.path[index]}`)}
+        >
+          Post
+        </Avatar>
+      }
+      title={<a href={`${process.env.NEXT_PUBLIC_WEBURL}/posts/${props.path[index]}`}>{item}</a>}
+      
+    />
+  </List.Item>
+  
+  )
+  
   return (
     <>
       <style>
@@ -39,6 +60,24 @@ const Lists: NextPage = (anyProps: any) => {
         .btn{
           width: 100px;
           margin: 20px
+        }
+        .list-actions-button {
+          position: relative;
+          padding: 0 4px;
+          border-radius: 2px;
+          color: rgb(var(--arcoblue-6));
+          cursor: pointer;
+          transition: all 0.1s;
+        }
+        
+        .list-actions  .arco-list-item-action li:not(:last-child) .list-actions-button::after {
+          content: '';
+          position: absolute;
+          top: 3px;
+          right: -12px;
+          width: 1px;
+          height: 20px;
+          background-color: var(--color-fill-3);
         }
         `}
       </style>
@@ -63,28 +102,28 @@ const Lists: NextPage = (anyProps: any) => {
                   height: 400,
                 }}
                 className="list-actions"
-                style={{ width: 620 }}
+                style={{ width: "calc(100% - 40px)", borderWidth: 0}}
                 dataSource={props.title}
-                render={(item, index) => (
-                  <List.Item key={index}>
-                    <List.Item.Meta
-                      avatar={
-                        <Avatar
-                          shape='square'
-                          triggerIcon={<IconEdit />}
-                          style={{ backgroundColor: 'rgb(122 113 88)' }}
-                          triggerType='mask'
-                          onClick={() => Router.push(`/edit/posts?path=${props.path[index]}`)}
-                        >
-                          Post
-                        </Avatar>
-                      }
-                      title={<a href={`${process.env.NEXT_PUBLIC_WEBURL}/posts/${props.path[index]}`}>{item}</a>}
-                    />
-                  </List.Item>)}
+                render={render.bind(null, [
+                  <Button className='list-actions-button' onClick={() => {Router.push(`/edit/posts?path=${null}`)}}>Edit</Button>,
+                  // <span className='list-actions-button' onClick={() => {Delete()}}>Delete</span>,
+                  <Popconfirm
+                    className='list-actions-button'
+                    title='真的要删除吗?'
+                    onOk={() => {
+                      Message.info({ content: 'ok' });
+                    }}
+                    onCancel={() => {
+                      // Message.error({ content: 'cancel' });
+                    }}
+                  >
+                    <Button>Delete</Button>
+                  </Popconfirm>
+
+                ])}
               />
-              { anyProps.nowPage == 1 ? null : <Button type='outline' className={'btn_up btn'} onClick={() => {Router.push(`/list/${anyProps.type}?page=${anyProps.nowPage - 1}`)}}> 上一页 </Button> }
-              { anyProps.next ? <Button type='outline' className={"btn_next btn"} onClick={() => {Router.push(`/list/${anyProps.type}?page=${anyProps.nowPage + 1}`)}}>下一页</Button> : null}
+              { anyProps.nowPage == 1 ? null : <Button type='outline' className={'btn_up btn'} onClick={() => {Router.push(`/list/${anyProps.type}?page=${Number(anyProps.nowPage) - 1}`)}}> 上一页 </Button> }
+              { anyProps.next ? <Button type='outline' className={"btn_next btn"} onClick={() => {Router.push(`/list/${anyProps.type}?page=${Number(anyProps.nowPage) + 1}`)}}>下一页</Button> : null}
               </Content>
               <Footers />
           </Layout>
@@ -99,8 +138,12 @@ Lists.getInitialProps = async (ctx) => {
   if (!type){
     () => {return {"ok": 0}}
   }
-  let pages = page ? page : 1
-  const data = await $axios.get(`${type}/list?type=limit&page=${pages}`).then( (res) => {
+  // 将 page 转化为 number
+  let pages = Number(page)
+  console.log(typeof pages)
+  pages = page ? page : 1
+  
+  const data = await $axios.get(`${type}/list?type=limit&page=${Number(pages)}`).then( (res) => {
     return {
       title: res.data.map((item: { title: string; }) => item.title),
       path: res.data.map((item: { path: string; }) => item.path)
@@ -108,7 +151,8 @@ Lists.getInitialProps = async (ctx) => {
   }).catch(
     () => {return {"ok": 0, "mes": "page not found"}}
   )
-  const nextPage = await $axios.get(`${type}/list?type=limit&page=${pages + 1}`).then(res => {
+  const nextPage = await $axios.get(`${type}/list?type=limit&page=${Number(pages) + 1}`).then(res => {
+    console.log(res.data)
     return res.data.map((item: { title: string; }) => item.title).length ? true : false
   })
   return {
