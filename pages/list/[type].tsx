@@ -98,7 +98,7 @@ const Lists: NextPage = (anyProps: any) => {
         <Side/>
         <Layout>
           <Header>
-            <Button shape='round' className='trigger' onClick={() => Router.back}>
+            <Button shape='round' className='trigger' onClick={() => Router.back()}>
                 <IconCaretLeft />
             </Button>
           </Header>
