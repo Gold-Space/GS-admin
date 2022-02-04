@@ -1,6 +1,6 @@
 import type { NextPage } from 'next'
-import { Layout, Menu, Breadcrumb, Button, Message, Avatar, Typography, Space, Grid, Statistic, Badge } from '@arco-design/web-react';
-import { IconHome, IconCalendar, IconCaretRight, IconCaretLeft, IconEdit } from '@arco-design/web-react/icon';
+import { Layout, Menu, Breadcrumb, Button, Message, Avatar, Typography, Space, Grid, Statistic, Badge, Popconfirm } from '@arco-design/web-react';
+import { IconHome, IconCalendar, IconCaretRight, IconCaretLeft, IconEdit, IconDelete } from '@arco-design/web-react/icon';
 import { useEffect, useState } from 'react';
 import Router from 'next/router';
 import Side from '../components/Side';
@@ -15,8 +15,6 @@ const Home: NextPage = () => {
   const Header = Layout.Header;
   const Footer = Layout.Footer;
   const Content = Layout.Content;
-  // 设置状态
-  const [collapsed, setCollapsed] = useState(false);
   // post
   const [postList, setPostList] = useState([]);
   const [postPath, setpostPath] = useState([]);
@@ -36,7 +34,7 @@ const Home: NextPage = () => {
     $axios.get("/stats").then(res => {
       setStatsNum(res.data ? res.data : {});
     })
-    $axios.get("/posts/list?query=limit").then(res => {
+    $axios.get("/posts/list?type=limit").then(res => {
       // 将res.data中每一个对象的title 转存为数组
       const postTitle = res.data.map((item: { title: string; }) => item.title);
       const postPath = res.data.map((item: { path: string; }) => item.path);
@@ -44,7 +42,7 @@ const Home: NextPage = () => {
       setpostPath(postPath ? postPath : []);
       // console.log(postPath);
     })
-    $axios.get("/pages/list?query=limit").then(res => {
+    $axios.get("/pages/list?type=limit").then(res => {
       // 将res.data中每一个对象的title 转存为数组
       const pageTitle = res.data.map((item: { title: string; }) => item.title);
       const pagePath = res.data.map((item: { path: string; }) => item.path);
@@ -55,14 +53,39 @@ const Home: NextPage = () => {
 
   return (
     <>
+      <style>
+        {`
+        .arco-list-item-extra-content{
+          display: flex;
+          flex-wrap: nowrap;
+          align-self: center;
+          list-style: none;
+          align-content: center;
+          justify-content: center;
+          align-items: center;
+        }
+        .list-actions-icon {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 24px;
+          height: 24px;
+          border-radius: 50%;
+          transition: all 0.1s;
+          margin-left: 10px
+        }
+        
+        .list-actions-icon:hover {
+          background-color: var(--color-fill-3);
+        }
+        `}
+      </style>
       <Layout className='layout-collapse arco-layout-has-sider'>
-        <Side
-          collapsed={collapsed}
-        />
+        <Side/>
         <Layout>
           <Header>
-            <Button shape='round' className='trigger' onClick={() => setCollapsed(!collapsed)}>
-              {collapsed ? <IconCaretRight /> : <IconCaretLeft />}
+            <Button shape='round' className='trigger' onClick={() => Router.back}>
+              <IconCaretRight />
             </Button>
           </Header>
           <Layout style={{ padding: '0 24px' }}>
@@ -108,7 +131,31 @@ const Home: NextPage = () => {
                     size='small'
                     dataSource={postList}
                     render={(item, index) => (
-                      <List.Item key={index}>
+                      <List.Item key={index}
+                      extra={[
+                        // eslint-disable-next-line react/jsx-key
+                        <div className="arco-list-item-action">
+                        <span className='list-actions-icon' onClick={() => {Router.push(`/edit/posts?path=${postPath[index]}`)}}>
+                          <IconEdit />
+                        </span>
+                        <Popconfirm
+                          className='list-actions-button'
+                          title='真的要删除吗?'
+                          onOk={() => {
+                            Message.loading({ content: '删除中' });
+                            $axios.delete(`posts/delete/${postPath[index]}`).then(res => {
+                              Message.success({ content: "删除成功" });
+                              // 重新渲染页面
+                              Router.reload();
+                            })
+                          }}
+                          // onCancel={() => {Router.reload();}}
+                        >
+                          <span className='list-actions-icon'><IconDelete /></span>
+                        </Popconfirm>
+                        </div>
+                      ]}
+                      >
                         <List.Item.Meta
                           avatar={
                             <Avatar
@@ -134,20 +181,44 @@ const Home: NextPage = () => {
                     size='small'
                     dataSource={pageList}
                     render={(item, index) => (
-                      <List.Item key={index}>
+                      <List.Item key={index}
+                      extra={[
+                        // eslint-disable-next-line react/jsx-key
+                        <div className="arco-list-item-action">
+                        <span className='list-actions-icon' onClick={() => {Router.push(`/edit/pages?path=${pagePath[index]}`)}}>
+                          <IconEdit />
+                        </span>
+                        <Popconfirm
+                          className='list-actions-button'
+                          title='真的要删除吗?'
+                          onOk={() => {
+                            Message.loading({ content: '删除中' });
+                            $axios.delete(`pages/delete/${pagePath[index]}`).then(res => {
+                              Message.success({ content: "删除成功" });
+                              // 重新渲染页面
+                              Router.reload();
+                            })
+                          }}
+                          // onCancel={() => {Router.reload();}}
+                        >
+                          <span className='list-actions-icon'><IconDelete /></span>
+                        </Popconfirm>
+                        </div>
+                      ]}
+                      >
                         <List.Item.Meta
                           avatar={
                             <Avatar
-                              shape='square'
-                              triggerIcon={<IconEdit />}
-                              triggerType='mask'
-                              style={{ backgroundColor: '#FFC72E' }}
-                              onClick={() => Router.push(`/edit/pages?path=${pagePath[index]}`)}
+                            shape='square'
+                            triggerIcon={<IconEdit />}
+                            triggerType='mask'
+                            style={{ backgroundColor: '#FFC72E' }}
+                              onClick={() => Router.push(`/edit/pages?path=${postPath[index]}`)}
                             >
                               Page
                             </Avatar>
                           }
-                          title={<a href={`${process.env.NEXT_PUBLIC_WEBURL}/pages/${pagePath[index]}`}>{item}</a>}
+                          title={<a href={`${process.env.NEXT_PUBLIC_WEBURL}/pages/${postPath[index]}`}>{item}</a>}
                         />
                       </List.Item>)}
                   />

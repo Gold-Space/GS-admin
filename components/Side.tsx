@@ -7,29 +7,24 @@ import Router from 'next/router';
  * @author: Wibus
  * @Date: 2022-01-20 17:04:46
  * @LastEditors: Wibus
- * @LastEditTime: 2022-02-02 11:48:21
+ * @LastEditTime: 2022-02-04 23:07:10
  * Coding With IU
  */
-function Side(props: any) {
+function Side() {
   const MenuItem = Menu.Item;
   const SubMenu = Menu.SubMenu;
 
   const Sider = Layout.Sider;
   return (
-    <Sider collapsed={props.collapsed} collapsible trigger={null} breakpoint='xl'>
-    <div className={props.collapsed ? 'm-1' : 'm-4'}>
+    <Sider trigger={null} breakpoint='xl'>
+    <div className="m-4">
     <Space><Avatar style={{ backgroundColor: '#14a9f8' }}>G</Avatar> <span className='font-black text-lg antialiased'>GS-Admin</span></Space>
     </div>
 
     <Menu
-      // defaultOpenKeys={['1']}
       defaultSelectedKeys={['0_1']}
-      onClickMenuItem={(key) =>
-        {}
-      }
       style={{ width: '100%' }}
     >
-      {/* 点击跳转至baidu.com */}
       <MenuItem key='0_1' onClick={() => Router.push('/')}>
         <IconHome />
         首页
@@ -67,7 +62,7 @@ function Side(props: any) {
       >
         <MenuItem key='0_2'>
       <IconEdit />
-        <a onClick={() => {Router.push('/edit/posts')}}>新增文章</a>
+        <a onClick={() => {Router.push('/edit/posts','/edit/posts')}}>新增文章</a>
       </MenuItem>
       <MenuItem key='0_3'>
       <IconFile />

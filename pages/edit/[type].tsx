@@ -3,7 +3,7 @@
  * @author: Wibus
  * @Date: 2022-01-21 13:13:51
  * @LastEditors: Wibus
- * @LastEditTime: 2022-02-01 20:34:22
+ * @LastEditTime: 2022-02-04 23:08:43
  * Coding With IU
  */
 
@@ -70,13 +70,11 @@ const Edit: NextPage = (props) => {
   return (
   <>
   <Layout className='layout-collapse arco-layout-has-sider'>
-        <Side
-          collapsed={collapsed}
-        />
+        <Side/>
         <Layout>
           <Header>
-            <Button shape='round' className='trigger' onClick={() => setCollapsed(!collapsed)}>
-              {collapsed ? <IconCaretRight /> : <IconCaretLeft />}
+          <Button shape='round' className='trigger' onClick={() => Router.back}>
+              <IconCaretRight />
             </Button>
           </Header>
           <Layout style={{ padding: '0 24px' }}>
@@ -86,6 +84,7 @@ const Edit: NextPage = (props) => {
             </Breadcrumb>
             <Content >
               <Form 
+              onKeyPress={() => {}}
               style={{ width: '100%', marginLeft: 100, marginTop:30}}
               autoComplete="off"
               onSubmit={(e) => {
@@ -149,6 +148,7 @@ const Edit: NextPage = (props) => {
                 initialValue={prop.data ? prop.data.content : undefined}
                 >
                   <Input.TextArea 
+                  onPressEnter={(e) => {}}
                   placeholder='Content...'
                   style={{height: 250}}
                   required />
@@ -162,6 +162,7 @@ const Edit: NextPage = (props) => {
                   <InputTag 
                   allowClear
                   placeholder='Tags'
+                  onPressEnter={() => {}}
                   />
                 </FormItem>                
 

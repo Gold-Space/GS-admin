@@ -4,15 +4,14 @@
  * @author: Wibus
  * @Date: 2022-01-29 12:36:38
  * @LastEditors: Wibus
- * @LastEditTime: 2022-02-02 21:45:58
+ * @LastEditTime: 2022-02-04 23:08:31
  * Coding With IU
  */
 import { Layout, Form, Breadcrumb, Button, List, Avatar, Message, Popconfirm } from "@arco-design/web-react";
 import { IconCaretRight, IconCaretLeft, IconEdit, IconDelete } from "@arco-design/web-react/icon";
 import { NextPage } from "next"
 import Router from "next/router";
-import { ReactChild, ReactElement, ReactNode, useState } from "react";
-import { useMount } from "react-use";
+import { ReactNode, useState } from "react";
 import { Footers } from "../../components/Footer";
 import Side from "../../components/Side";
 import $axios from "../../utils/request";
@@ -24,11 +23,7 @@ const Lists: NextPage = (anyProps: any) => {
 
   const Header = Layout.Header;
   const Content = Layout.Content;
-  
-  // 设置状态
-  const [collapsed, setCollapsed] = useState(false);
 
-  let [renderPath, setRenderPath] = useState(0);
 
   const render = (action: ReactNode[],item: any, index: any) => (
     <>
@@ -55,21 +50,7 @@ const Lists: NextPage = (anyProps: any) => {
         </div>
       ]}>
 
-      <List.Item.Meta
-        avatar={
-          <Avatar
-            shape='square'
-            triggerIcon={<IconEdit />}
-            style={{ backgroundColor: 'rgb(122 113 88)' }}
-            triggerType='mask'
-            onClick={() => Router.push(`/edit/posts?path=${props.path[index]}`)}
-          >
-            Post
-          </Avatar>
-        }
-        title={<a href={`${process.env.NEXT_PUBLIC_WEBURL}/posts/${props.path[index]}`}>{item}</a>}
-        
-      ></List.Item.Meta>
+      <List.Item.Meta title={<a href={`${process.env.NEXT_PUBLIC_WEBURL}/posts/${props.path[index]}`}>{item}</a>}></List.Item.Meta>
     </List.Item>
     
     </>
@@ -87,6 +68,15 @@ const Lists: NextPage = (anyProps: any) => {
         .btn{
           width: 100px;
           margin: 20px
+        }
+        .arco-list-item-extra-content{
+          display: flex;
+          flex-wrap: nowrap;
+          align-self: center;
+          list-style: none;
+          align-content: center;
+          justify-content: center;
+          align-items: center;
         }
         .list-actions-icon {
           display: flex;
@@ -106,13 +96,11 @@ const Lists: NextPage = (anyProps: any) => {
         `}
       </style>
       <Layout className='layout-collapse arco-layout-has-sider'>
-        <Side
-          collapsed={collapsed}
-        />
+        <Side/>
         <Layout>
           <Header>
-            <Button shape='round' className='trigger' onClick={() => setCollapsed(!collapsed)}>
-              {collapsed ? <IconCaretRight /> : <IconCaretLeft />}
+            <Button shape='round' className='trigger' onClick={() => Router.back}>
+                <IconCaretRight />
             </Button>
           </Header>
           <Layout style={{ padding: '0 24px' }}>
