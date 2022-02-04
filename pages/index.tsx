@@ -85,7 +85,7 @@ const Home: NextPage = () => {
         <Layout>
           <Header>
             <Button shape='round' className='trigger' onClick={() => Router.back}>
-              <IconCaretRight />
+              <IconCaretLeft />
             </Button>
           </Header>
           <Layout style={{ padding: '0 24px' }}>

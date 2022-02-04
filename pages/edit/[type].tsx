@@ -3,7 +3,7 @@
  * @author: Wibus
  * @Date: 2022-01-21 13:13:51
  * @LastEditors: Wibus
- * @LastEditTime: 2022-02-04 23:08:43
+ * @LastEditTime: 2022-02-04 23:10:22
  * Coding With IU
  */
 
@@ -74,7 +74,7 @@ const Edit: NextPage = (props) => {
         <Layout>
           <Header>
           <Button shape='round' className='trigger' onClick={() => Router.back}>
-              <IconCaretRight />
+              <IconCaretLeft />
             </Button>
           </Header>
           <Layout style={{ padding: '0 24px' }}>
