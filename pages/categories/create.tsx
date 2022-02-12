@@ -3,7 +3,7 @@
  * @author: Wibus
  * @Date: 2022-02-12 12:22:41
  * @LastEditors: Wibus
- * @LastEditTime: 2022-02-12 12:25:25
+ * @LastEditTime: 2022-02-12 19:56:52
  * Coding With IU
  */
 
@@ -41,6 +41,7 @@ const CategoriesCreate: NextPage = (props) => {
           <Layout style={{ padding: '0 24px' }}>
             <Breadcrumb style={{ margin: '16px 0' }}>
               <Breadcrumb.Item>Home</Breadcrumb.Item>
+              <Breadcrumb.Item>Categories</Breadcrumb.Item>
               <Breadcrumb.Item>edit</Breadcrumb.Item>
             </Breadcrumb>
             <Content >

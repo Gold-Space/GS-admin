@@ -42,6 +42,7 @@ const CategoriesEdit: NextPage = (props) => {
           <Layout style={{ padding: '0 24px' }}>
             <Breadcrumb style={{ margin: '16px 0' }}>
               <Breadcrumb.Item>Home</Breadcrumb.Item>
+              <Breadcrumb.Item>Categories</Breadcrumb.Item>
               <Breadcrumb.Item>edit</Breadcrumb.Item>
             </Breadcrumb>
             <Content >

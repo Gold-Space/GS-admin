@@ -4,7 +4,7 @@
  * @author: Wibus
  * @Date: 2022-02-09 15:37:05
  * @LastEditors: Wibus
- * @LastEditTime: 2022-02-12 12:39:24
+ * @LastEditTime: 2022-02-12 19:56:26
  * Coding With IU
  */
 
@@ -106,6 +106,7 @@ const CateGoriesLists: NextPage = (anyProps: any) => {
           <Layout style={{ padding: '0 24px' }}>
             <Breadcrumb style={{ margin: '16px 0' }}>
               <Breadcrumb.Item>Home</Breadcrumb.Item>
+              <Breadcrumb.Item>Categories</Breadcrumb.Item>
               <Breadcrumb.Item>List</Breadcrumb.Item>
             </Breadcrumb>
               <Content style={{display: "inline"}}>
