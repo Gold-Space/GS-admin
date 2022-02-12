@@ -7,7 +7,7 @@ import Router from 'next/router';
  * @author: Wibus
  * @Date: 2022-01-20 17:04:46
  * @LastEditors: Wibus
- * @LastEditTime: 2022-02-12 13:16:58
+ * @LastEditTime: 2022-02-12 22:23:52
  * Coding With IU
  */
 function Side() {
@@ -50,6 +50,10 @@ function Side() {
           <IconTool />
           <a onClick={() => {Router.push('/categories')}}>全部分类</a>
         </MenuItem>
+        <MenuItem key='4_4'>
+          <IconUser />
+          <a onClick={() => {Router.push('/friends')}}>全部友链</a>
+        </MenuItem>
       </SubMenu>
 
       <SubMenu
@@ -69,10 +73,14 @@ function Side() {
       <IconFile />
       <a onClick={() => {Router.push("/edit/pages")}}>新增页面</a>
       </MenuItem>
-        <MenuItem key='0_4'>
-          <IconCodeSandbox />
-          <a onClick={() => {Router.push('/categories/create')}}>新增分类</a>
-        </MenuItem>
+      <MenuItem key='0_4'>
+        <IconCodeSandbox />
+        <a onClick={() => {Router.push('/categories/create')}}>新增分类</a>
+      </MenuItem>
+      <MenuItem key='4_4'>
+        <IconUser />
+        <a onClick={() => {Router.push('/friends');Message.info("点击新增按钮即可添加")}}>新增友链</a>
+      </MenuItem>
       </SubMenu>
 
     </Menu>
