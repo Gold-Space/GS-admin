@@ -1,5 +1,5 @@
 import { Avatar, Layout, Link, Menu, Message, Space } from "@arco-design/web-react";
-import { IconHome, IconCalendar, IconUser, IconEdit, IconFile, IconTool, IconCamera } from "@arco-design/web-react/icon";
+import { IconHome, IconCalendar, IconUser, IconEdit, IconFile, IconTool, IconCamera, IconSend, IconCodeSandbox } from "@arco-design/web-react/icon";
 import Router from 'next/router';
 
 /*
@@ -7,7 +7,7 @@ import Router from 'next/router';
  * @author: Wibus
  * @Date: 2022-01-20 17:04:46
  * @LastEditors: Wibus
- * @LastEditTime: 2022-02-04 23:07:10
+ * @LastEditTime: 2022-02-09 15:53:58
  * Coding With IU
  */
 function Side() {
@@ -48,7 +48,7 @@ function Side() {
         </MenuItem>
         <MenuItem key='4_3'>
           <IconTool />
-          <a>全部分类</a>
+          <a onClick={() => {Router.push('/categories')}}>全部分类</a>
         </MenuItem>
       </SubMenu>
       <SubMenu
@@ -69,6 +69,22 @@ function Side() {
       <a onClick={() => {Router.push("/edit/pages")}}>新增页面</a>
       </MenuItem>
       </SubMenu>
+
+      <SubMenu
+        key='2'
+        title={
+          <span>
+            <IconSend />
+            新增什么
+          </span>
+        }
+      >
+        <MenuItem key='0_4'>
+          <IconCodeSandbox />
+          <a onClick={() => {Router.push('/edit/categories')}}>新增分类</a>
+        </MenuItem>
+      </SubMenu>
+
     </Menu>
   </Sider>
   )

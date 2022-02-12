@@ -3,7 +3,7 @@
  * @author: Wibus
  * @Date: 2022-01-21 13:13:51
  * @LastEditors: Wibus
- * @LastEditTime: 2022-02-04 23:10:22
+ * @LastEditTime: 2022-02-09 15:57:35
  * Coding With IU
  */
 
@@ -55,7 +55,7 @@ const Edit: NextPage = (props) => {
     }
     // console.log(prop.where);
     
-    $axios.get("category/list?list").then(res => {
+    $axios.get("/category/list?list").then(res => {
       // res.data 内每一个对象的slug和name单独取出为一个对象并组成数组
       let arr = res.data.map((item: { slug: any; name: any; }) => {
         return {

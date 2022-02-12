@@ -16,7 +16,10 @@ function App({ Component, pageProps }: AppProps) {
       setInterval(() => {
         $axios.get("/super/ping").then(() => {
           // Router.push("/")
-        }).catch(()=>{Message.error("密钥过期")})
+        }).catch(()=>{
+          Message.error("密钥过期")
+          Router.push("/login")
+        })
       }, 30000);
       // return () => {
       //   clearTimeout(timer);

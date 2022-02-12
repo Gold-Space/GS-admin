@@ -1,34 +1,34 @@
+
 /*
- * @FilePath: /GS-admin/pages/list/[type].tsx
+ * @FilePath: /GS-admin/pages/categories/index.tsx
  * @author: Wibus
- * @Date: 2022-01-29 12:36:38
+ * @Date: 2022-02-09 15:37:05
  * @LastEditors: Wibus
- * @LastEditTime: 2022-02-09 15:48:04
+ * @LastEditTime: 2022-02-09 16:11:42
  * Coding With IU
  */
-import { Layout, Form, Breadcrumb, Button, List, Avatar, Message, Popconfirm } from "@arco-design/web-react";
-import { IconCaretRight, IconCaretLeft, IconEdit, IconDelete } from "@arco-design/web-react/icon";
-import { NextPage } from "next"
+
+import { Layout, List, Popconfirm, Message, Button, Breadcrumb } from "@arco-design/web-react";
+import { IconEdit, IconDelete, IconCaretLeft } from "@arco-design/web-react/icon";
+import { NextPage } from "next";
 import Router from "next/router";
-import { ReactNode, useState } from "react";
+import { ReactNode } from "react";
 import { Footers } from "../../components/Footer";
 import Side from "../../components/Side";
 import $axios from "../../utils/request";
 
-
-const Lists: NextPage = (anyProps: any) => {
-
+const CateGoriesLists: NextPage = (anyProps: any) => {
   const props = anyProps.data
 
   const Header = Layout.Header;
   const Content = Layout.Content;
 
-
+  console.log(props.name)
   const render = (action: ReactNode[],item: any, index: any) => (
     <>
       <List.Item key={index} actions={action} extra={[
         <div key={index} className="arco-list-item-action">
-        <span className='list-actions-icon' onClick={() => {Router.push(`/edit/posts?path=${props.path[index]}`)}}>
+        <span className='list-actions-icon' onClick={() => {Router.push(`/categories/edit?slug=${props.slug[index]}`)}}>
           <IconEdit />
         </span>
         <Popconfirm
@@ -36,7 +36,7 @@ const Lists: NextPage = (anyProps: any) => {
           title='真的要删除吗?'
           onOk={() => {
             Message.loading({ content: '删除中' });
-            $axios.delete(`${anyProps.type}/delete/${props.path[index]}`).then(res => {
+            $axios.delete(`categories/delete/${props.slug[index]}`).then(res => {
               Message.success({ content: "删除成功" });
               // 重新渲染页面
               Router.reload();
@@ -49,7 +49,7 @@ const Lists: NextPage = (anyProps: any) => {
         </div>
       ]}>
 
-      <List.Item.Meta title={<a href={`${process.env.NEXT_PUBLIC_WEBURL}/posts/${props.path[index]}`}>{item}</a>}></List.Item.Meta>
+      <List.Item.Meta title={item}></List.Item.Meta>
     </List.Item>
     
     </>
@@ -114,11 +114,11 @@ const Lists: NextPage = (anyProps: any) => {
                 }}
                 className="list-actions"
                 style={{ width: "calc(100% - 40px)", borderWidth: 0}}
-                dataSource={props.title}
+                dataSource={props.name}
                 render={render.bind(null, [])}
               />
-              { anyProps.nowPage == 1 ? null : <Button type='outline' className={'btn_up btn'} onClick={() => {Router.push(`/list/${anyProps.type}?page=${Number(anyProps.nowPage) - 1}`)}}> 上一页 </Button> }
-              { anyProps.next ? <Button type='outline' className={"btn_next btn"} onClick={() => {Router.push(`/list/${anyProps.type}?page=${Number(anyProps.nowPage) + 1}`)}}>下一页</Button> : null}
+              { anyProps.nowPage == 1 ? null : <Button type='outline' className={'btn_up btn'} onClick={() => {Router.push(`/categories?page=${Number(anyProps.nowPage) - 1}`)}}> 上一页 </Button> }
+              { anyProps.next ? <Button type='outline' className={"btn_next btn"} onClick={() => {Router.push(`/categories?page=${Number(anyProps.nowPage) + 1}`)}}>下一页</Button> : null}
               </Content>
               <Footers />
           </Layout>
@@ -128,36 +128,30 @@ const Lists: NextPage = (anyProps: any) => {
   )
 }
 
-Lists.getInitialProps = async (ctx) => {
-  const { page, type } = ctx.query as any
-  if (!type){
-    () => {return {"ok": 0}}
-  }
-  // 将 page 转化为 number
+CateGoriesLists.getInitialProps = async (ctx: any) => {
+  const { page } = ctx.query;
   let pages = Number(page)
-  // console.log(typeof pages)
   pages = page ? page : 1
-  
-  const data = await $axios.get(`${type}/list?type=limit&page=${Number(pages)}`).then( (res) => {
+  const data = await $axios.get(`category/list?type=limit&page=${Number(pages)}`).then( (res) => {
     return {
-      title: res.data.map((item: { title: string; }) => item.title),
-      path: res.data.map((item: { path: string; }) => item.path)
+      name: res.data.map((item: { name: string; }) => item.name),
+      slug: res.data.map((item: { slug: string; }) => item.slug)
     }
   }).catch(
     () => {return {"ok": 0, "mes": "page not found"}}
   )
-  const nextPage = await $axios.get(`${type}/list?type=limit&page=${Number(pages) + 1}`).then(res => {
-    console.log(res.data)
-    return res.data.map((item: { title: string; }) => item.title).length ? true : false
+
+  const nextPage = await $axios.get(`category/list?type=limit&page=${Number(pages) + 1}`).then(res => {
+    // console.log(res.data)
+    return res.data.map((item: { id: string; }) => item.id).length ? true : false
   })
+
   return {
-    type: type, // 种类
     nowPage: pages, // 当前页
     data: data, // 数据
     next: nextPage // 下一页情况
   }
+
 }
 
-
-export default Lists
-
+export default CateGoriesLists
