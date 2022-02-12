@@ -7,7 +7,7 @@ import Router from 'next/router';
  * @author: Wibus
  * @Date: 2022-01-20 17:04:46
  * @LastEditors: Wibus
- * @LastEditTime: 2022-02-09 15:53:58
+ * @LastEditTime: 2022-02-12 12:24:19
  * Coding With IU
  */
 function Side() {
@@ -81,7 +81,7 @@ function Side() {
       >
         <MenuItem key='0_4'>
           <IconCodeSandbox />
-          <a onClick={() => {Router.push('/edit/categories')}}>新增分类</a>
+          <a onClick={() => {Router.push('/categories/create')}}>新增分类</a>
         </MenuItem>
       </SubMenu>
 
