@@ -3,7 +3,7 @@
  * @author: Wibus
  * @Date: 2022-01-19 20:37:52
  * @LastEditors: Wibus
- * @LastEditTime: 2022-02-01 14:15:37
+ * @LastEditTime: 2022-02-12 12:32:01
  * Coding With IU
  */
 
@@ -21,6 +21,8 @@ const LoginView: NextPage = () => {
       $axios.get("/super/ping").then(() => {
         Router.push("/")
       }).catch(()=>{Message.error("未登录")})
+    }else{
+      Message.error("未登录")
     }
   }, [])
   return (

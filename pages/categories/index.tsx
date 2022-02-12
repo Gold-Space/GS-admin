@@ -4,7 +4,7 @@
  * @author: Wibus
  * @Date: 2022-02-09 15:37:05
  * @LastEditors: Wibus
- * @LastEditTime: 2022-02-09 16:11:42
+ * @LastEditTime: 2022-02-12 12:39:24
  * Coding With IU
  */
 
@@ -23,7 +23,6 @@ const CateGoriesLists: NextPage = (anyProps: any) => {
   const Header = Layout.Header;
   const Content = Layout.Content;
 
-  console.log(props.name)
   const render = (action: ReactNode[],item: any, index: any) => (
     <>
       <List.Item key={index} actions={action} extra={[
@@ -36,10 +35,12 @@ const CateGoriesLists: NextPage = (anyProps: any) => {
           title='真的要删除吗?'
           onOk={() => {
             Message.loading({ content: '删除中' });
-            $axios.delete(`categories/delete/${props.slug[index]}`).then(res => {
+            $axios.delete(`category/delete/${props.id[index]}`).then(res => {
               Message.success({ content: "删除成功" });
               // 重新渲染页面
               Router.reload();
+            }).catch(err => {
+              Message.error({ content:err.message });
             })
           }}
           // onCancel={() => {Router.reload();}}
@@ -134,6 +135,7 @@ CateGoriesLists.getInitialProps = async (ctx: any) => {
   pages = page ? page : 1
   const data = await $axios.get(`category/list?type=limit&page=${Number(pages)}`).then( (res) => {
     return {
+      id: res.data.map((item: { id: string; }) => item.id),
       name: res.data.map((item: { name: string; }) => item.name),
       slug: res.data.map((item: { slug: string; }) => item.slug)
     }

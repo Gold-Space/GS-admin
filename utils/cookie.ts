@@ -3,13 +3,13 @@
  * @author: Wibus
  * @Date: 2022-01-19 20:34:17
  * @LastEditors: Wibus
- * @LastEditTime: 2022-01-20 22:30:40
+ * @LastEditTime: 2022-02-12 12:33:09
  * Coding With IU
  */
 import dayjs from 'dayjs'
 import Cookies from 'js-cookie'
 
-const TokenKey = 'gs-web-token'
+const TokenKey = 'gs-admin-token'
 
 export function getToken(): string | null {
   const token = Cookies.get(TokenKey)
