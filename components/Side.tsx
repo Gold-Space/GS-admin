@@ -7,7 +7,7 @@ import Router from 'next/router';
  * @author: Wibus
  * @Date: 2022-01-20 17:04:46
  * @LastEditors: Wibus
- * @LastEditTime: 2022-02-12 12:24:19
+ * @LastEditTime: 2022-02-12 13:16:58
  * Coding With IU
  */
 function Side() {
@@ -51,24 +51,6 @@ function Side() {
           <a onClick={() => {Router.push('/categories')}}>全部分类</a>
         </MenuItem>
       </SubMenu>
-      <SubMenu
-        key='1'
-        title={
-          <span>
-            <IconTool />
-            写点什么
-          </span>
-        }
-      >
-        <MenuItem key='0_2'>
-      <IconEdit />
-        <a onClick={() => {Router.push('/edit/posts','/edit/posts')}}>新增文章</a>
-      </MenuItem>
-      <MenuItem key='0_3'>
-      <IconFile />
-      <a onClick={() => {Router.push("/edit/pages")}}>新增页面</a>
-      </MenuItem>
-      </SubMenu>
 
       <SubMenu
         key='2'
@@ -79,6 +61,14 @@ function Side() {
           </span>
         }
       >
+      <MenuItem key='0_2'>
+      <IconEdit />
+        <a onClick={() => {Router.push('/edit/posts','/edit/posts')}}>新增文章</a>
+      </MenuItem>
+      <MenuItem key='0_3'>
+      <IconFile />
+      <a onClick={() => {Router.push("/edit/pages")}}>新增页面</a>
+      </MenuItem>
         <MenuItem key='0_4'>
           <IconCodeSandbox />
           <a onClick={() => {Router.push('/categories/create')}}>新增分类</a>
