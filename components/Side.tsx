@@ -1,5 +1,5 @@
 import { Avatar, Layout, Link, Menu, Message, Space } from "@arco-design/web-react";
-import { IconHome, IconCalendar, IconUser, IconEdit, IconFile, IconTool, IconCamera, IconSend, IconCodeSandbox } from "@arco-design/web-react/icon";
+import { IconHome, IconCalendar, IconUser, IconEdit, IconFile, IconTool, IconCamera, IconSend, IconCodeSandbox, IconMessage } from "@arco-design/web-react/icon";
 import Router from 'next/router';
 
 /*
@@ -7,7 +7,7 @@ import Router from 'next/router';
  * @author: Wibus
  * @Date: 2022-01-20 17:04:46
  * @LastEditors: Wibus
- * @LastEditTime: 2022-02-12 22:23:52
+ * @LastEditTime: 2022-02-13 16:54:58
  * Coding With IU
  */
 function Side() {
@@ -53,6 +53,11 @@ function Side() {
         <MenuItem key='4_4'>
           <IconUser />
           <a onClick={() => {Router.push('/friends')}}>全部友链</a>
+        </MenuItem>
+        {/* 全部评论 */}
+        <MenuItem key='4_5'>
+          <IconMessage />
+          <a onClick={() => {Router.push('/comments')}}>全部评论</a>
         </MenuItem>
       </SubMenu>
 

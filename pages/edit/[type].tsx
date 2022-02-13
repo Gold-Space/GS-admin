@@ -41,7 +41,7 @@ const Edit: NextPage = (props) => {
 
   // 设置状态
   const [collapsed, setCollapsed] = useState(false);
-  const [categoryList, setCategoryList] = useState<any[]>([]);  
+  const [categoriesList, setCategoriesList] = useState<any[]>([]);  
 
   let prop = props as propClass;
   // console.log(prop);
@@ -55,7 +55,7 @@ const Edit: NextPage = (props) => {
     }
     // console.log(prop.where);
     
-    $axios.get("/category/list?list").then(res => {
+    $axios.get("/categories/list?list").then(res => {
       // res.data 内每一个对象的slug和name单独取出为一个对象并组成数组
       let arr = res.data.map((item: { slug: any; name: any; }) => {
         return {
@@ -64,7 +64,7 @@ const Edit: NextPage = (props) => {
         }
       })
       // console.log(arr);
-      setCategoryList(arr);
+      setCategoriesList(arr);
     })
   });
   return (
@@ -176,7 +176,7 @@ const Edit: NextPage = (props) => {
                   placeholder="Slug">
                     {
                       
-                    categoryList.map((option, index) => (
+                    categoriesList.map((option, index) => (
                     <Select.Option key={option.slug} disabled={index === 3} value={option.slug}>
                       {option.name}
                     </Select.Option>

@@ -3,7 +3,7 @@
  * @author: Wibus
  * @Date: 2022-02-12 12:22:41
  * @LastEditors: Wibus
- * @LastEditTime: 2022-02-12 19:56:52
+ * @LastEditTime: 2022-02-13 17:16:19
  * Coding With IU
  */
 
@@ -50,7 +50,7 @@ const CategoriesCreate: NextPage = (props) => {
               style={{ width: '100%', marginLeft: 100, marginTop:30}}
               autoComplete="off"
               onSubmit={(e) => {
-                $axios.post(`category/create`,e).then(() => {
+                $axios.post(`categories/create`,e).then(() => {
                   Message.success('提交成功');
                   Router.push("/")
                   Router.push("/categories");

@@ -51,7 +51,7 @@ const CategoriesEdit: NextPage = (props) => {
               style={{ width: '100%', marginLeft: 100, marginTop:30}}
               autoComplete="off"
               onSubmit={(e) => {
-                $axios.post(`category/update`,e).then(() => {
+                $axios.post(`categories/update`,e).then(() => {
                   Message.success('提交成功');
                   Router.push("/")
                   Router.push(`/categories`);
@@ -103,7 +103,7 @@ const CategoriesEdit: NextPage = (props) => {
 
 CategoriesEdit.getInitialProps = async (ctx) => {
   const { slug } = ctx.query;
-  const data  = await $axios.get(`category/${slug}`)
+  const data  = await $axios.get(`categories/${slug}`)
     .then(
     res => {
         return res

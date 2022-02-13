@@ -34,7 +34,7 @@ const Home: NextPage = () => {
     $axios.get("/stats").then(res => {
       setStatsNum(res.data ? res.data : {});
     })
-    $axios.get("/posts/list?type=limit").then(res => {
+    $axios.get("/posts/list?type=limit&limit=5").then(res => {
       // 将res.data中每一个对象的title 转存为数组
       const postTitle = res.data.map((item: { title: string; }) => item.title);
       const postPath = res.data.map((item: { path: string; }) => item.path);
@@ -42,7 +42,7 @@ const Home: NextPage = () => {
       setpostPath(postPath ? postPath : []);
       // console.log(postPath);
     })
-    $axios.get("/pages/list?type=limit").then(res => {
+    $axios.get("/pages/list?type=limit&limit=5").then(res => {
       // 将res.data中每一个对象的title 转存为数组
       const pageTitle = res.data.map((item: { title: string; }) => item.title);
       const pagePath = res.data.map((item: { path: string; }) => item.path);

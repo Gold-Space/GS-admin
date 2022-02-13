@@ -35,7 +35,7 @@ const CateGoriesLists: NextPage = (anyProps: any) => {
           title='真的要删除吗?'
           onOk={() => {
             Message.loading({ content: '删除中' });
-            $axios.delete(`category/delete/${props.id[index]}`).then(res => {
+            $axios.delete(`categories/delete/${props.id[index]}`).then(res => {
               Message.success({ content: "删除成功" });
               // 重新渲染页面
               Router.reload();
@@ -134,7 +134,7 @@ CateGoriesLists.getInitialProps = async (ctx: any) => {
   const { page } = ctx.query;
   let pages = Number(page)
   pages = page ? page : 1
-  const data = await $axios.get(`category/list?type=limit&page=${Number(pages)}`).then( (res) => {
+  const data = await $axios.get(`categories/list?type=limit&page=${Number(pages)}`).then( (res) => {
     return {
       id: res.data.map((item: { id: string; }) => item.id),
       name: res.data.map((item: { name: string; }) => item.name),
@@ -144,7 +144,7 @@ CateGoriesLists.getInitialProps = async (ctx: any) => {
     () => {return {"ok": 0, "mes": "page not found"}}
   )
 
-  const nextPage = await $axios.get(`category/list?type=limit&page=${Number(pages) + 1}`).then(res => {
+  const nextPage = await $axios.get(`categories/list?type=limit&page=${Number(pages) + 1}`).then(res => {
     // console.log(res.data)
     return res.data.map((item: { id: string; }) => item.id).length ? true : false
   })
