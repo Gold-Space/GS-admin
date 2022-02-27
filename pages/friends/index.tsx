@@ -3,7 +3,7 @@
  * @author: Wibus
  * @Date: 2022-02-12 14:11:01
  * @LastEditors: Wibus
- * @LastEditTime: 2022-02-12 22:19:16
+ * @LastEditTime: 2022-02-27 20:23:06
  * Coding With IU
  */
 
@@ -461,7 +461,7 @@ const FriendsLists: NextPage = (anyProps: any) => {
 }
 
 FriendsLists.getInitialProps = async (ctx: any) => {
-  const data = await $axios.get(`friends/list`).then( (res) => {
+  const data = await $axios.get(`friends/list?type=true-all`).then( (res) => {
     return {
       id: res.data.map((item: { id: string; }) => item.id),
       name: res.data.map((item: { name: string; }) => item.name),
