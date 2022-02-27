@@ -3,7 +3,7 @@
  * @author: Wibus
  * @Date: 2022-01-29 12:36:38
  * @LastEditors: Wibus
- * @LastEditTime: 2022-02-09 15:48:04
+ * @LastEditTime: 2022-02-27 19:50:43
  * Coding With IU
  */
 import { Layout, Form, Breadcrumb, Button, List, Avatar, Message, Popconfirm } from "@arco-design/web-react";
@@ -28,7 +28,7 @@ const Lists: NextPage = (anyProps: any) => {
     <>
       <List.Item key={index} actions={action} extra={[
         <div key={index} className="arco-list-item-action">
-        <span className='list-actions-icon' onClick={() => {Router.push(`/edit/posts?path=${props.path[index]}`)}}>
+        <span className='list-actions-icon' onClick={() => {Router.push(`/edit/${anyProps.type}?path=${props.path[index]}`)}}>
           <IconEdit />
         </span>
         <Popconfirm
@@ -49,7 +49,7 @@ const Lists: NextPage = (anyProps: any) => {
         </div>
       ]}>
 
-      <List.Item.Meta title={<a href={`${process.env.NEXT_PUBLIC_WEBURL}/posts/${props.path[index]}`}>{item}</a>}></List.Item.Meta>
+      <List.Item.Meta title={{item}}></List.Item.Meta>
     </List.Item>
     
     </>
