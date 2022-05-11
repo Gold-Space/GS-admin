@@ -3,7 +3,7 @@
  * @author: Wibus
  * @Date: 2022-01-21 13:13:51
  * @LastEditors: Wibus
- * @LastEditTime: 2022-02-09 15:57:35
+ * @LastEditTime: 2022-05-11 16:56:26
  * Coding With IU
  */
 
@@ -28,6 +28,8 @@ type propClass = {
     content: string | undefined;
     tags: string | undefined;
     slug: string | undefined;
+    updatedAt: string | undefined;
+    createdAt: string | undefined;
   }
   where: string | undefined
 }
@@ -177,13 +179,31 @@ const Edit: NextPage = (props) => {
                     {
                       
                     categoriesList.map((option, index) => (
-                    <Select.Option key={option.slug} disabled={index === 3} value={option.slug}>
+                    <Select.Option key={option.slug} value={option.slug}>
                       {option.name}
                     </Select.Option>
                   ))
                   }
 
                   </Select>
+                </FormItem>
+
+                <FormItem 
+                // label='Title'
+                field='createdAt'
+                initialValue={prop.data ? prop.data.createdAt : undefined}
+                disabled
+                >
+                  <Input placeholder='createdAt...'/>
+                </FormItem>
+
+                <FormItem 
+                // label='Title'
+                field='updatedAt'
+                initialValue={prop.data ? prop.data.updatedAt : undefined}
+                disabled
+                >
+                  <Input placeholder='updatedAt...'/>
                 </FormItem>
 
                 <FormItem>

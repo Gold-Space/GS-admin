@@ -3,7 +3,7 @@
  * @author: Wibus
  * @Date: 2022-01-29 12:36:38
  * @LastEditors: Wibus
- * @LastEditTime: 2022-02-27 19:50:43
+ * @LastEditTime: 2022-05-11 17:24:52
  * Coding With IU
  */
 import { Layout, Form, Breadcrumb, Button, List, Avatar, Message, Popconfirm } from "@arco-design/web-react";
@@ -48,8 +48,7 @@ const Lists: NextPage = (anyProps: any) => {
         </Popconfirm>
         </div>
       ]}>
-
-      <List.Item.Meta title={{item}}></List.Item.Meta>
+      <List.Item.Meta title={item}></List.Item.Meta>
     </List.Item>
     
     </>
@@ -138,7 +137,7 @@ Lists.getInitialProps = async (ctx) => {
   // console.log(typeof pages)
   pages = page ? page : 1
   
-  const data = await $axios.get(`${type}/list?type=limit&page=${Number(pages)}`).then( (res) => {
+  const data = await $axios.get(`${type}/list?page=${Number(pages)}`).then( (res) => {
     return {
       title: res.data.map((item: { title: string; }) => item.title),
       path: res.data.map((item: { path: string; }) => item.path)
@@ -146,8 +145,8 @@ Lists.getInitialProps = async (ctx) => {
   }).catch(
     () => {return {"ok": 0, "mes": "page not found"}}
   )
-  const nextPage = await $axios.get(`${type}/list?type=limit&page=${Number(pages) + 1}`).then(res => {
-    console.log(res.data)
+  const nextPage = await $axios.get(`${type}/list?page=${Number(pages) + 1}`).then(res => {
+    // console.log(res.data)
     return res.data.map((item: { title: string; }) => item.title).length ? true : false
   })
   return {
