@@ -1,5 +1,5 @@
 {
-  "name": "gs-admin",
+  "name": "nx-admin",
   "private": true,
   "scripts": {
     "dev": "NODE_ENV=development next dev -p 2223",
